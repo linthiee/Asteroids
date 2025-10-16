@@ -1,44 +1,121 @@
 #include "GameLoop.h"
+#include "Asteroids.h"
+#include "Globals.h"
+#include <string>
+#include <ctime>
+
+#pragma region	Game_Essentials_Declarations
+
+namespace ESSENTIALS
+{
+	static const std::string title = "Asteroids";
+
+	static void InitializeWindow();
+
+	static void UpdateDeltaTime();
+
+	static bool IsWindowClosed();
+
+	static void StartDrawing();
+	static void FinishDrawing();
+
+	static void BackgroundClear(Color color);
+
+	static void WindowClose();
+
+	static void SetSeed(); 
+}
+#pragma endregion		
+
+namespace OBJECTS
+{
+	ASTEROIDS::Asteroid asteroids[GLOBALS::maxAsteroids] = { 0 };
+}
 
 void ASTEROIDS::MainLoop()
 {
+	// initialization 
 
-//------------------------------------------------------------------------------------
-// Program main entry point
-//------------------------------------------------------------------------------------
-   
-        // Initialization
-        //--------------------------------------------------------------------------------------
-        const int screenWidth = 800;
-        const int screenHeight = 450;
+	ESSENTIALS::SetSeed();
 
-        InitWindow(screenWidth, screenHeight, "raylib [core] example - basic window");
+	for (int i = 0; i < GLOBALS::maxAsteroids; i++)
+	{
+		ASTEROIDS::CreateAsteroid(OBJECTS::asteroids[i]);
+	}
 
-        SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
-        //--------------------------------------------------------------------------------------
+	ESSENTIALS::InitializeWindow();
 
-        // Main game loop
-        while (!WindowShouldClose())    // Detect window close button or ESC key
-        {
-            // Update
-            //----------------------------------------------------------------------------------
-            // TODO: Update your variables here
-            //----------------------------------------------------------------------------------
+	while (!ESSENTIALS::IsWindowClosed())
+	{
+		// update
+		ESSENTIALS::UpdateDeltaTime();
 
-            // Draw
-            //----------------------------------------------------------------------------------
-            BeginDrawing();
+		for (int i = 0; i < GLOBALS::maxAsteroids; i++)
+		{
+			ASTEROIDS::UpdateAsteroid(OBJECTS::asteroids[i]);
+		}
 
-            ClearBackground(RAYWHITE);
+		ESSENTIALS::StartDrawing();
+		ESSENTIALS::BackgroundClear(BLACK);
 
-            DrawText("Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY);
+		// draw
 
-            EndDrawing();
-            //----------------------------------------------------------------------------------
-        }
+		for (int i = 0; i < GLOBALS::maxAsteroids; i++)
+		{
+			if (!OBJECTS::asteroids[i].isActive)
+			{
+				return;
+			}
 
-        // De-Initialization
-        //--------------------------------------------------------------------------------------
-        CloseWindow();        // Close window and OpenGL context
-        //--------------------------------------------------------------------------------------
+			ASTEROIDS::DrawAsteroid(OBJECTS::asteroids[i]);
+		}
+
+		ESSENTIALS::FinishDrawing();
+	}
+	ESSENTIALS::WindowClose();
 }
+
+#pragma region Game_Essential_Definitions
+
+
+void ESSENTIALS::InitializeWindow()
+{
+	InitWindow(GLOBALS::screenWidth, GLOBALS::screenHeight, ESSENTIALS::title.c_str());
+}
+
+void ESSENTIALS::UpdateDeltaTime()
+{
+	EXTERNS::deltaT = GetFrameTime();
+}
+
+bool ESSENTIALS::IsWindowClosed()
+{
+	return WindowShouldClose();
+}
+
+void ESSENTIALS::StartDrawing()
+{
+	BeginDrawing();
+}
+
+void ESSENTIALS::FinishDrawing()
+{
+	EndDrawing();
+}
+
+void ESSENTIALS::BackgroundClear(Color color)
+{
+	ClearBackground(color);
+}
+
+void ESSENTIALS::WindowClose()
+{
+	CloseWindow();
+}
+
+void ESSENTIALS::SetSeed()
+{
+	SetRandomSeed(static_cast<unsigned int>(time(nullptr)));
+}
+
+#pragma endregion

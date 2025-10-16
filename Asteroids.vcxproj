@@ -19,11 +19,15 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Asteroids.cpp" />
     <ClCompile Include="src\GameLoop.cpp" />
+    <ClCompile Include="src\Globals.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Asteroids.h" />
     <ClInclude Include="src\GameLoop.h" />
+    <ClInclude Include="src\Globals.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
