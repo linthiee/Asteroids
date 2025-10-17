@@ -1,6 +1,7 @@
 #include "GameLoop.h"
 #include "Asteroids.h"
 #include "Globals.h"
+#include "raylib.h"
 #include <string>
 #include <time.h>
 

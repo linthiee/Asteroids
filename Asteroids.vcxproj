@@ -23,11 +23,13 @@
     <ClCompile Include="src\GameLoop.cpp" />
     <ClCompile Include="src\Globals.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Spaceship.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Asteroids.h" />
     <ClInclude Include="src\GameLoop.h" />
     <ClInclude Include="src\Globals.h" />
+    <ClInclude Include="src\Spaceship.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

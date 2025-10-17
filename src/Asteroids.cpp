@@ -3,7 +3,7 @@
 static int radius = 10;
 
 static int minRotationSpeed = 5;
-static int maxRotationSpeed = 180;
+static int maxRotationSpeed = 120;
 
 static int rotationDegree = 360;
 
@@ -43,11 +43,11 @@ void ASTEROIDS::UpdateAsteroid(Asteroid& asteroid)
 
 #pragma region Check_If_Is_Out_Of_Bonds
 
-	if (asteroid.position.x - static_cast<float>(radius / 2* static_cast<int>(asteroid.type)) > GLOBALS::screenWidth)
+	if (asteroid.position.x - static_cast<float>(radius * static_cast<int>(asteroid.type)) > GLOBALS::screenWidth)
 	{
 		asteroid.position.x = 0;
 	}
-	if (asteroid.position.x + static_cast<float>(radius / 2 * static_cast<int>(asteroid.type)) < 0)
+	if (asteroid.position.x + static_cast<float>(radius * static_cast<int>(asteroid.type)) < 0)
 	{
 		asteroid.position.x = GLOBALS::screenWidth - static_cast<float>(radius / 2 * static_cast<int>(asteroid.type));
 	}
@@ -55,7 +55,7 @@ void ASTEROIDS::UpdateAsteroid(Asteroid& asteroid)
 	{
 		asteroid.position.y = 0;
 	}
-	if (asteroid.position.y + static_cast<float>(radius / 2 * static_cast<int>(asteroid.type)) < 0)
+	if (asteroid.position.y + static_cast<float>(radius * static_cast<int>(asteroid.type)) < 0)
 	{
 		asteroid.position.y = GLOBALS::screenHeight;
 	}

@@ -11,5 +11,5 @@ namespace GLOBALS
 	const int screenWidth = 1024;
 	const int screenHeight = 768;
 
-	const int maxAsteroids = 1;
+	const int maxAsteroids = 64;
 }
