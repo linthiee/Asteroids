@@ -16,8 +16,8 @@ void ASTEROIDS::CreateAsteroid(Asteroid& asteroid)
 {
 	baseSpeed = static_cast<float>(GetRandomValue(minSpeed, maxSpeed));
 
-	asteroid.type = AsteroidType::Large;
-	//asteroid.type = static_cast<AsteroidType>(GetRandomValue(static_cast<int>(AsteroidType::Small), static_cast<int>(AsteroidType::Large)));
+	//asteroid.type = AsteroidType::Large;
+	asteroid.type = static_cast<AsteroidType>(GetRandomValue(static_cast<int>(AsteroidType::Small), static_cast<int>(AsteroidType::Large)));
 
 	float speedFactor = ((1.0f / static_cast<float>(asteroid.type)) * baseSpeed);
 

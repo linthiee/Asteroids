@@ -1,5 +1,6 @@
 #pragma once
 #include "raylib.h"
+#include "raymath.h"
 #include "Globals.h"
 
 namespace PLAYER
@@ -10,6 +11,13 @@ namespace PLAYER
 		Vector2 lookingDirection;
 		Vector2 position;
 
-		float velocity;
+		float speed;
+
+		float maxHealth;
+		float currentHealth;
 	};
+
+	void CreateSpaceship(Spaceship& spaceship);
+	void UpdateSpaceship(Spaceship& spaceship);
+	void DrawSpaceship(Spaceship spaceship);
 }

@@ -1,5 +1,6 @@
 #include "GameLoop.h"
 #include "Asteroids.h"
+#include "Spaceship.h"
 #include "Globals.h"
 #include "raylib.h"
 #include <string>
@@ -31,6 +32,7 @@ namespace ESSENTIALS
 namespace OBJECTS
 {
 	ASTEROIDS::Asteroid asteroids[GLOBALS::maxAsteroids] = { 0 };
+	PLAYER::Spaceship spaceship;
 }
 
 void ASTEROIDS::MainLoop()
@@ -44,12 +46,16 @@ void ASTEROIDS::MainLoop()
 		ASTEROIDS::CreateAsteroid(OBJECTS::asteroids[i]);
 	}
 
+	PLAYER::CreateSpaceship(OBJECTS::spaceship);
+
 	ESSENTIALS::InitializeWindow();
 
 	while (!ESSENTIALS::IsWindowClosed())
 	{
 		// update
 		ESSENTIALS::UpdateDeltaTime();
+
+		PLAYER::UpdateSpaceship(OBJECTS::spaceship);
 
 		for (int i = 0; i < GLOBALS::maxAsteroids; i++)
 		{
@@ -70,6 +76,8 @@ void ASTEROIDS::MainLoop()
 
 			ASTEROIDS::DrawAsteroid(OBJECTS::asteroids[i]);
 		}
+		
+		PLAYER::DrawSpaceship(OBJECTS::spaceship);
 
 		ESSENTIALS::FinishDrawing();
 	}
