@@ -1,6 +1,8 @@
 #include "GameLoop.h"
 
-void main()
+int main()
 {
 	ASTEROIDS::MainLoop();
+
+	return 0;
 }

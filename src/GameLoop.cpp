@@ -2,7 +2,7 @@
 #include "Asteroids.h"
 #include "Globals.h"
 #include <string>
-#include <ctime>
+#include <time.h>
 
 #pragma region	Game_Essentials_Declarations
 

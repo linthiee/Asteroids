@@ -8,8 +8,8 @@ namespace EXTERNS
 
 namespace GLOBALS
 {
-	const int screenWidth = 800;
-	const int screenHeight = 450;
+	const int screenWidth = 1024;
+	const int screenHeight = 768;
 
-	const int maxAsteroids = 64;
+	const int maxAsteroids = 1;
 }
