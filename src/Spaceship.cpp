@@ -30,10 +30,13 @@ void PLAYER::UpdateSpaceship(Spaceship& spaceship)
 {
 	spaceship.lookingDirection = { GetMousePosition().x - spaceship.position.x, GetMousePosition().y - spaceship.position.y };
 
+	spaceship.direction = Vector2Normalize(spaceship.direction);
+	spaceship.lookingDirection = Vector2Normalize(spaceship.lookingDirection);
+
 	if (IsAccelerating())
 	{
-		spaceship.direction.x += spaceship.lookingDirection.x * EXTERNS::deltaT * 0.1f;
-		spaceship.direction.y += spaceship.lookingDirection.y * EXTERNS::deltaT * 0.1f;
+		spaceship.direction.x += spaceship.lookingDirection.x * 0.1f;
+		spaceship.direction.y += spaceship.lookingDirection.y * 0.1f;
 
 		spaceship.speed += (spaceship.acceleration * EXTERNS::deltaT);
 
@@ -52,7 +55,6 @@ void PLAYER::UpdateSpaceship(Spaceship& spaceship)
 		}
 	}
 
-	spaceship.direction = Vector2Normalize(spaceship.direction);
 
 	spaceship.position.x += (spaceship.direction.x * EXTERNS::deltaT) * spaceship.speed;
 	spaceship.position.y += (spaceship.direction.y * EXTERNS::deltaT) * spaceship.speed;
