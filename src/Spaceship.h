@@ -11,6 +11,7 @@ namespace PLAYER
 		Vector2 lookingDirection;
 		Vector2 position;
 
+		float acceleration;
 		float speed;
 
 		float maxHealth;
@@ -18,6 +19,9 @@ namespace PLAYER
 	};
 
 	void CreateSpaceship(Spaceship& spaceship);
+
+	bool IsAccelerating();
 	void UpdateSpaceship(Spaceship& spaceship);
+
 	void DrawSpaceship(Spaceship spaceship);
 }
