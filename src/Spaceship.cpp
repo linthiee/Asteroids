@@ -32,6 +32,7 @@ void PLAYER::UpdateSpaceship(Spaceship& spaceship)
 
 	spaceship.direction = Vector2Normalize(spaceship.direction);
 	spaceship.lookingDirection = Vector2Normalize(spaceship.lookingDirection);
+	spaceship.acceleration = Normalize(spaceship.acceleration, 0.0f, 1.0f);
 
 	if (IsAccelerating())
 	{
@@ -55,7 +56,6 @@ void PLAYER::UpdateSpaceship(Spaceship& spaceship)
 		}
 	}
 
-
 	spaceship.position.x += (spaceship.direction.x * EXTERNS::deltaT) * spaceship.speed;
 	spaceship.position.y += (spaceship.direction.y * EXTERNS::deltaT) * spaceship.speed;
 
@@ -66,7 +66,7 @@ void PLAYER::UpdateSpaceship(Spaceship& spaceship)
 	{
 		spaceship.position.x = 0;
 	}
-	if (spaceship.position.x < 0)
+	if (spaceship.position.x + radius / 2 < 0)
 	{
 		spaceship.position.x = GLOBALS::screenWidth;
 	}
