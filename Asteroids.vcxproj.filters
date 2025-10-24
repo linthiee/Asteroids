@@ -30,7 +30,7 @@
     <ClCompile Include="src\Spaceship.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Bullets.cpp">
+    <ClCompile Include="src\Bullets.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -47,7 +47,7 @@
     <ClInclude Include="src\Spaceship.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Bullets.h">
+    <ClInclude Include="src\Bullets.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

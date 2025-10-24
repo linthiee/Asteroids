@@ -19,16 +19,16 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Bullets.cpp" />
     <ClCompile Include="src\Asteroids.cpp" />
+    <ClCompile Include="src\Bullets.cpp" />
     <ClCompile Include="src\GameLoop.cpp" />
     <ClCompile Include="src\Globals.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Spaceship.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Bullets.h" />
     <ClInclude Include="src\Asteroids.h" />
+    <ClInclude Include="src\Bullets.h" />
     <ClInclude Include="src\GameLoop.h" />
     <ClInclude Include="src\Globals.h" />
     <ClInclude Include="src\Spaceship.h" />

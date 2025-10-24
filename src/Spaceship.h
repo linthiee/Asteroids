@@ -10,8 +10,8 @@ namespace PLAYER
 		Vector2 direction;
 		Vector2 lookingDirection;
 		Vector2 position;
+		Vector2 velocity;
 
-		float acceleration;
 		float speed;
 
 		float maxHealth;
