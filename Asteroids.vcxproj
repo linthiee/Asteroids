@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClCompile Include="src\Asteroids.cpp" />
     <ClCompile Include="src\Bullets.cpp" />
+    <ClCompile Include="src\Draw.cpp" />
     <ClCompile Include="src\GameLoop.cpp" />
     <ClCompile Include="src\Globals.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -29,6 +30,7 @@
   <ItemGroup>
     <ClInclude Include="src\Asteroids.h" />
     <ClInclude Include="src\Bullets.h" />
+    <ClInclude Include="src\Draw.h" />
     <ClInclude Include="src\GameLoop.h" />
     <ClInclude Include="src\Globals.h" />
     <ClInclude Include="src\Spaceship.h" />
