@@ -24,8 +24,8 @@ void BULLETS::CreateBullet(Bullets& bullet, PLAYER::Spaceship spaceship)
 {
 	bullet.textureID = EXTERNS::firstFrameLaserTextureID;
 
-	bullet.height = 5.0f;
-	bullet.width = 8.0f;
+	bullet.height = 80.0f;
+	bullet.width = 50.0f;
 
 	Vector2 mousePos = GetMousePosition();
 	bullet.direction = Vector2Subtract(mousePos, spaceship.position);
@@ -41,7 +41,7 @@ void BULLETS::CreateBullet(Bullets& bullet, PLAYER::Spaceship spaceship)
 	bullet.currentLifeSpan = bullet.lifeSpan;
 	bullet.speed = 500.0f; 
 
-	bullet.angle = atan2f(bullet.direction.y, bullet.direction.x);
+	bullet.angle = atan2f(bullet.direction.y, bullet.direction.x) * RAD2DEG;
 }
 
 void BULLETS::UpdateBullet(Bullets& bullet)
@@ -63,7 +63,6 @@ void BULLETS::DrawBullet(Bullets bullet)
 	if (bullet.currentLifeSpan > 0.0f)
 	{
 		DRAW::DrawSpritePro(static_cast<float>(bullet.textureID), bullet.position.x, bullet.position.y, bullet.width, bullet.height, WHITE, bullet.angle);
-		DrawCircleV(bullet.position, 5.0f, RED);
 	}
 }
 
