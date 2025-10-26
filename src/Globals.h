@@ -18,6 +18,9 @@ namespace EXTERNS
 
 	extern std::string smallAsteroidTexture;
 	extern int smallAsteroidTextureID;
+
+	extern std::string firstFrameLaserTexture;
+	extern int firstFrameLaserTextureID;
 }
 
 namespace GLOBALS

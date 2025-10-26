@@ -16,3 +16,6 @@ int EXTERNS::mediumAsteroidTextureID = 0;
 
 std::string EXTERNS::smallAsteroidTexture = "res/img/small_asteroid.png";;
 int EXTERNS::smallAsteroidTextureID = 0;
+
+std::string EXTERNS::firstFrameLaserTexture = "res/img/laser_1.png";;
+int EXTERNS::firstFrameLaserTextureID = 0;

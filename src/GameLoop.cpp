@@ -1,10 +1,12 @@
 #include "GameLoop.h"
 #include "Asteroids.h"
 #include "Spaceship.h"
+#include "Bullets.h"
 #include "Globals.h"
 #include "raylib.h"
 #include <string>
 #include <time.h>
+#include <vector>
 
 #pragma region	Game_Essentials_Declarations
 
@@ -12,7 +14,7 @@ namespace ESSENTIALS
 {
 	static const std::string title = "Asteroids";
 
-	static void Initialization(Texture& tempTexture, PLAYER::Spaceship& spaceship, int& bigAsteroidTextureID, int& mediumAsteroidTextureID, int& smallAsteroidTextureID);
+	static void Initialization(Texture& tempTexture, PLAYER::Spaceship& spaceship, int& bigAsteroidTextureID, int& mediumAsteroidTextureID, int& smallAsteroidTextureID, int& firstFrameLaserTextureID);
 
 	static void InitializeWindow();
 
@@ -27,7 +29,7 @@ namespace ESSENTIALS
 
 	static void WindowClose();
 
-	static void SetSeed(); 
+	static void SetSeed();
 
 	static void SetWindow();
 }
@@ -43,6 +45,8 @@ namespace OBJECTS
 {
 	ASTEROIDS::Asteroid asteroids[GLOBALS::maxAsteroids] = { 0 };
 	PLAYER::Spaceship spaceship;
+
+	std::vector<BULLETS::Bullets> bullets;
 }
 
 namespace ASSETS
@@ -56,7 +60,7 @@ void ASTEROIDS::MainLoop()
 
 	ESSENTIALS::SetSeed();
 
- 	ESSENTIALS::Initialization(ASSETS::tempTexture, OBJECTS::spaceship, EXTERNS::bigAsteroidTextureID, EXTERNS::mediumAsteroidTextureID, EXTERNS::smallAsteroidTextureID);
+	ESSENTIALS::Initialization(ASSETS::tempTexture, OBJECTS::spaceship, EXTERNS::bigAsteroidTextureID, EXTERNS::mediumAsteroidTextureID, EXTERNS::smallAsteroidTextureID, EXTERNS::firstFrameLaserTextureID);
 	ESSENTIALS::SetWindow();
 
 	for (int i = 0; i < GLOBALS::maxAsteroids; i++)
@@ -66,7 +70,6 @@ void ASTEROIDS::MainLoop()
 
 	PLAYER::CreateSpaceship(OBJECTS::spaceship);
 
-
 	while (!ESSENTIALS::IsWindowClosed())
 	{
 		// update
@@ -74,6 +77,18 @@ void ASTEROIDS::MainLoop()
 		SCREEN::Update(EXTERNS::screenWidth, EXTERNS::screenHeight);
 
 		PLAYER::UpdateSpaceship(OBJECTS::spaceship);
+
+		BULLETS::AssignBulletsOnCreation(OBJECTS::bullets, OBJECTS::spaceship);
+		
+		if (OBJECTS::bullets.size() > 0)
+		{
+			for (int i = 0; i < OBJECTS::bullets.size(); i++)
+			{
+				BULLETS::UpdateBullet(OBJECTS::bullets[i]);
+			}
+		}
+
+		DeleteBullets(OBJECTS::bullets);
 
 		for (int i = 0; i < GLOBALS::maxAsteroids; i++)
 		{
@@ -85,6 +100,16 @@ void ASTEROIDS::MainLoop()
 
 		// draw
 
+		PLAYER::DrawSpaceship(OBJECTS::spaceship);
+
+		if (OBJECTS::bullets.size() > 0)
+		{
+			for (int i = 0; i < OBJECTS::bullets.size(); i++)
+			{
+				BULLETS::DrawBullet(OBJECTS::bullets[i]);
+			}
+		}
+
 		for (int i = 0; i < GLOBALS::maxAsteroids; i++)
 		{
 			if (!OBJECTS::asteroids[i].isActive)
@@ -95,8 +120,6 @@ void ASTEROIDS::MainLoop()
 			ASTEROIDS::DrawAsteroid(OBJECTS::asteroids[i]);
 		}
 
-		PLAYER::DrawSpaceship(OBJECTS::spaceship);
-
 		ESSENTIALS::FinishDrawing();
 	}
 	ESSENTIALS::WindowClose();
@@ -105,7 +128,7 @@ void ASTEROIDS::MainLoop()
 #pragma region Game_Essential_Definitions
 
 
-void ESSENTIALS::Initialization(Texture& tempTexture, PLAYER::Spaceship& spaceship, int& bigAsteroidTextureID, int& mediumAsteroidTextureID, int& smallAsteroidTextureID)
+void ESSENTIALS::Initialization(Texture& tempTexture, PLAYER::Spaceship& spaceship, int& bigAsteroidTextureID, int& mediumAsteroidTextureID, int& smallAsteroidTextureID, int& firstFrameLaserTextureID)
 {
 	ESSENTIALS::InitializeWindow();
 
@@ -120,6 +143,9 @@ void ESSENTIALS::Initialization(Texture& tempTexture, PLAYER::Spaceship& spacesh
 
 	tempTexture = LoadTexture(EXTERNS::smallAsteroidTexture.c_str());
 	smallAsteroidTextureID = tempTexture.id;
+
+	tempTexture = LoadTexture(EXTERNS::firstFrameLaserTexture.c_str());
+	firstFrameLaserTextureID = tempTexture.id;
 }
 
 void ESSENTIALS::InitializeWindow()

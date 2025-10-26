@@ -14,6 +14,7 @@ namespace PLAYER
 		Vector2 lookingDirection;
 		Vector2 position;
 		Vector2 velocity;
+		Vector2 lastValidAimDir;
 
 		float speed;
 
@@ -22,6 +23,9 @@ namespace PLAYER
 
 		float maxHealth;
 		float currentHealth;
+
+		float fireRate;
+		float currentFireRateCd;
 	};
 
 	void CreateSpaceship(Spaceship& spaceship);

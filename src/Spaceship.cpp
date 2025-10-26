@@ -2,7 +2,7 @@
 #include "Draw.h"
 
 static float radius = 10.0f;
-static float maxSpeed = 0.05f;
+static float maxSpeed = 500.0f;
 
 static int minRotationSpeed = 5;
 static int maxRotationSpeed = 240;
@@ -23,6 +23,9 @@ void PLAYER::CreateSpaceship(Spaceship& spaceship)
 
 	spaceship.maxHealth = 100.0f;
 	spaceship.currentHealth = 100.0f;
+
+	spaceship.fireRate = 0.2f;
+	spaceship.currentFireRateCd = 0.0f;
 
 	spaceship.lookingDirection.y = static_cast<float>(atan2f(spaceship.lookingDirection.y, spaceship.lookingDirection.x));
 }
@@ -46,8 +49,10 @@ void PLAYER::UpdateSpaceship(Spaceship& spaceship)
 	{
 		PLAYER::UpdateMovement(spaceship);
 	}
-	
-	PLAYER::UpdatePosition(spaceship);					
+
+	spaceship.currentFireRateCd -= EXTERNS::deltaT;
+
+	PLAYER::UpdatePosition(spaceship);
 	PLAYER::UpdateLookingDirection(spaceship);
 
 	PLAYER::CheckOutOfBonds(spaceship);
@@ -60,6 +65,13 @@ void PLAYER::UpdateMovement(Spaceship& spaceship)
 
 	spaceship.velocity.x += spaceship.direction.x * EXTERNS::deltaT * spaceship.speed;
 	spaceship.velocity.y += spaceship.direction.y * EXTERNS::deltaT * spaceship.speed;
+
+	float velMagnitude = Vector2Length(spaceship.velocity);
+
+	if (velMagnitude > maxSpeed)
+	{
+		spaceship.velocity = Vector2Scale(Vector2Normalize(spaceship.velocity), maxSpeed);
+	}
 }
 
 void PLAYER::UpdatePosition(Spaceship& spaceship)
