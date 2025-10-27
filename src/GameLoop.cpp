@@ -280,9 +280,6 @@ bool ESSENTIALS::HasCollided(PLAYER::Spaceship spaceship, ASTEROIDS::Asteroid as
 	float sumOfRadius = asteroidRadius + spaceshipRadius;
 	float sumOfRadiusSquared = sumOfRadius * sumOfRadius;
 
-	DrawCircle(static_cast<int>(asteroidPixelX), static_cast<int>(asteroidPixelY), asteroidRadius, RED);
-	DrawCircle(static_cast<int>(spaceshipPixelX), static_cast<int>(spaceshipPixelY), spaceshipRadius, GREEN);
-
 	return distanceSquared <= sumOfRadiusSquared;
 }
 
