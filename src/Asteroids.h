@@ -27,6 +27,8 @@ namespace ASTEROIDS
 		float rotation;
 		float speed;
 
+		float radius;
+
 		int size;
 		int score;
 
@@ -42,7 +44,6 @@ namespace ASTEROIDS
 	void CheckOutOfBonds(Asteroid& asteroid);
 
 	bool HasCollided(BULLETS::Bullets& bullet, Asteroid& asteroid);
-	bool HasCollided(PLAYER::Spaceship spacehsip, Asteroid asteroid);
 
 	void SplitAsteroid(Asteroid& asteroid, Asteroid allAsteroids[GLOBALS::maxAsteroids]);
 

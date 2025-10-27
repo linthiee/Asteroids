@@ -33,6 +33,9 @@ namespace EXTERNS
 
 	extern std::string shootEffect;
 	extern Sound shootEffectSound;
+
+	extern std::string asteroidExplosion;
+	extern Sound asteroidExplosionSound;
 }
 
 namespace GLOBALS

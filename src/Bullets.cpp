@@ -2,6 +2,9 @@
 #include "Draw.h"
 #include "Globals.h" 
 #include "raymath.h"
+#include "Utils.h"
+
+static Vector2 mousePercent;
 
 bool BULLETS::IsShooting()
 {
@@ -33,19 +36,19 @@ void BULLETS::CreateBullet(Bullets& bullet, PLAYER::Spaceship spaceship)
 
 	bullet.radius = 5.0f;
 
-	Vector2 mousePos = GetMousePosition();
-	bullet.direction = Vector2Subtract(mousePos, spaceship.position);
+	mousePercent = { UTILS::PixelsToPercentX(GetMousePosition().x), UTILS::PixelsToPercentY(GetMousePosition().y) };
 
+	bullet.direction = Vector2Subtract(mousePercent, spaceship.position);
 	bullet.direction = Vector2Normalize(bullet.direction);
 
-	float shipTipOffset = spaceship.height / 2; 
+	float shipTipOffset = UTILS::PixelsToPercentY(spaceship.height / 2);
 	bullet.position = Vector2Add(spaceship.position, Vector2Scale(bullet.direction, shipTipOffset));
 
+	bullet.speed = 100.0f; 
 	bullet.velocity = { bullet.direction.x * bullet.speed, bullet.direction.y * bullet.speed };
 
 	bullet.lifeSpan = 1.0f;
 	bullet.currentLifeSpan = bullet.lifeSpan;
-	bullet.speed = 500.0f; 
 
 	bullet.angle = atan2f(bullet.direction.y, bullet.direction.x) * RAD2DEG;
 }
@@ -66,9 +69,12 @@ void BULLETS::UpdateBullet(Bullets& bullet)
 
 void BULLETS::DrawBullet(Bullets bullet)
 {
+	float width = UTILS::PixelsToPercentX(bullet.width);
+	float height = UTILS::PixelsToPercentY(bullet.height);
+
 	if (bullet.currentLifeSpan > 0.0f)
 	{
-		DRAW::DrawSpritePro(static_cast<float>(bullet.textureID), bullet.position.x, bullet.position.y, bullet.width, bullet.height, WHITE, bullet.angle);
+		DRAW::DrawSpritePro(static_cast<float>(bullet.textureID), bullet.position.x, bullet.position.y, width, height, WHITE, bullet.angle);
 	}
 }
 

@@ -1,5 +1,6 @@
 #include "Draw.h"
 #include "Globals.h"
+#include "Utils.h"
 
 void DRAW::DrawSprite(float id, float posX, float posY, float width, float height, Color color)
 {
@@ -17,31 +18,29 @@ void DRAW::DrawSprite(float id, float posX, float posY, float width, float heigh
 
 void DRAW::DrawSpritePro(float id, float posX, float posY, float width, float height, Color color, float rotation)
 {
-	Texture texture;
+    Texture texture;
 
-	texture.id = static_cast<unsigned int>(id);
-	texture.width = static_cast<int>(width * (static_cast<float>(EXTERNS::screenWidth) / 100.0f));
-	texture.height = static_cast<int>(height * (static_cast<float>(EXTERNS::screenHeight) / 100.0f));
+    texture.id = static_cast<unsigned int>(id);
+    texture.width = static_cast<int>(width * (static_cast<float>(EXTERNS::screenWidth) / 100.0f));
+    texture.height = static_cast<int>(height * (static_cast<float>(EXTERNS::screenHeight) / 100.0f));
 
-	Rectangle source =
-	{
-		0,
-		0,
-		static_cast<float>(texture.width),
-		static_cast<float>(texture.height)
-	};
+    Rectangle source = { 0, 0, (float)texture.width, (float)texture.height };
 
-	Rectangle dest =
-	{
-		posX,
-		posY,
-		width,
-		height
-	};
+    Rectangle dest =
+    {
+        UTILS::PercentToPixelsX(posX),
+        UTILS::PercentToPixelsY(posY),
+        UTILS::PercentToPixelsX(width),
+        UTILS::PercentToPixelsY(height)
+    };
 
-	Vector2 origin = { width / 2.0f, height / 2.0f };
+    Vector2 origin =
+    {
+        dest.width / 2.0f,
+        dest.height / 2.0f
+    };
 
-	DrawTexturePro(texture, source, dest, origin, rotation, color);
+    DrawTexturePro(texture, source, dest, origin, rotation, color);
 }
 
 void DRAW::DrawText(TEXT::Text text)

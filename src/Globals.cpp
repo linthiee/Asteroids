@@ -30,3 +30,6 @@ int EXTERNS::gameHudID = 0;
 
  std::string  EXTERNS::shootEffect = "res/sound/spaceship_shot.wav";
  Sound EXTERNS::shootEffectSound;
+
+ std::string  EXTERNS::asteroidExplosion = "res/sound/asteroid_explosion.wav";
+ Sound EXTERNS::asteroidExplosionSound;

@@ -2,6 +2,7 @@
 #include "Asteroids.h"
 #include "raymath.h"
 #include "Draw.h"
+#include "Utils.h"
 
 static int radius = 10;
 
@@ -25,6 +26,8 @@ void ASTEROIDS::CreateAsteroid(Asteroid& asteroid)
 
 	//asteroid.type = AsteroidType::Large;
 	asteroid.type = static_cast<AsteroidType>(GetRandomValue(static_cast<int>(AsteroidType::Small), static_cast<int>(AsteroidType::Large)));
+
+	asteroid.radius = 5.0f;
 
 	switch (asteroid.type)
 	{
@@ -63,8 +66,8 @@ void ASTEROIDS::CreateAsteroid(Asteroid& asteroid)
 
 	asteroid.isActive = true;
 
-	asteroid.position.x = static_cast<float>(GetRandomValue(0, EXTERNS::screenWidth));
-	asteroid.position.y = static_cast<float>(GetRandomValue(0, EXTERNS::screenHeight));
+	asteroid.position.x = static_cast<float>(GetRandomValue(0, 100));
+	asteroid.position.y = static_cast<float>(GetRandomValue(0, 100));
 
 	asteroid.velocity = { baseSpeed * speedFactor , baseSpeed * speedFactor };
 
@@ -84,59 +87,56 @@ void ASTEROIDS::UpdateAsteroid(Asteroid& asteroid)
 
 void ASTEROIDS::UpdateMovement(Asteroid& asteroid)
 {
-	asteroid.position = Vector2Add(asteroid.position, Vector2Scale(asteroid.velocity, EXTERNS::deltaT));
+	Vector2 velocityPercent = { (asteroid.velocity.x / EXTERNS::screenWidth) * 100.0f, (asteroid.velocity.y / EXTERNS::screenHeight) * 100.0f };
+
+	asteroid.position = Vector2Add(asteroid.position, Vector2Scale(velocityPercent, EXTERNS::deltaT));
 	asteroid.rotation += asteroid.speed * EXTERNS::deltaT;
 }
 
 void ASTEROIDS::CheckOutOfBonds(Asteroid& asteroid)
 {
-	if (asteroid.position.x - static_cast<float>(radius * static_cast<int>(asteroid.type)) > EXTERNS::screenWidth)
+	float pixelRadius = static_cast<float>(radius * static_cast<int>(asteroid.type));
+
+	float radiusPercentX = UTILS::PixelsToPercentX(pixelRadius);
+	float radiusPercentY = UTILS::PixelsToPercentY(pixelRadius);
+
+	if (asteroid.position.x - radiusPercentX > 100.0f)
 	{
-		asteroid.position.x = 0;
+		asteroid.position.x = 0.0f - radiusPercentX; 
 	}
-	if (asteroid.position.x + static_cast<float>(radius * static_cast<int>(asteroid.type)) < 0)
+	if (asteroid.position.x + radiusPercentX < 0.0f)
 	{
-		asteroid.position.x = EXTERNS::screenWidth - static_cast<float>(radius / 2 * static_cast<int>(asteroid.type));
+		asteroid.position.x = 100.0f + radiusPercentX; 
 	}
-	if (asteroid.position.y - static_cast<float>(radius * static_cast<int>(asteroid.type)) > EXTERNS::screenHeight)
+	if (asteroid.position.y - radiusPercentY > 100.0f)
 	{
-		asteroid.position.y = 0;
+		asteroid.position.y = 0.0f - radiusPercentY;
 	}
-	if (asteroid.position.y + static_cast<float>(radius * static_cast<int>(asteroid.type)) < 0)
+	if (asteroid.position.y + radiusPercentY < 0.0f)
 	{
-		asteroid.position.y = static_cast<float>(EXTERNS::screenHeight);
+		asteroid.position.y = 100.0f + radiusPercentY;
 	}
 }
 
 bool ASTEROIDS::HasCollided(BULLETS::Bullets& bullet, Asteroid& asteroid)
 {
-	float distX = asteroid.position.x - bullet.position.x;
-	float distY = asteroid.position.y - bullet.position.y;
+	float bulletPixelX = UTILS::PercentToPixelsX(bullet.position.x);
+	float bulletPixelY = UTILS::PercentToPixelsY(bullet.position.y);
+	float asteroidPixelX = UTILS::PercentToPixelsX(asteroid.position.x);
+	float asteroidPixelY = UTILS::PercentToPixelsY(asteroid.position.y);
 
-	float distance = (distX * distX) + (distY * distY);
-
-	float asteroidRadius = static_cast<float>(radius * static_cast<int>(asteroid.size));
-	float sum = asteroidRadius + bullet.radius;
-
-	return distance <= (sum * sum);
-}
-
-bool ASTEROIDS::HasCollided(PLAYER::Spaceship spaceship, Asteroid asteroid)
-{
-	float distX = spaceship.position.x - asteroid.position.x;
-	float distY = spaceship.position.y - asteroid.position.y;
-
-	float distance = (distX * distX) + (distY * distY);
+	float distX = bulletPixelX - asteroidPixelX;
+	float distY = bulletPixelY - asteroidPixelY;
+	float distanceSquared = (distX * distX) + (distY * distY);
 
 	float asteroidRadius = static_cast<float>(radius * static_cast<int>(asteroid.size));
-	float sum = asteroidRadius + spaceship.radius;
+	float bulletRadius = bullet.radius;
 
-	DrawCircle(static_cast<int>(asteroid.position.x), static_cast<int>(asteroid.position.y), asteroidRadius, RED);
-	DrawCircle(static_cast<int>(spaceship.position.x), static_cast<int>(spaceship.position.y), spaceship.radius, GREEN);
+	float sumOfRadius = asteroidRadius + bulletRadius;
+	float sumOfRadiusSquared = sumOfRadius * sumOfRadius;
 
-	return distance <= (sum * sum);
+	return distanceSquared <= sumOfRadiusSquared;
 }
-
 
 void ASTEROIDS::SplitAsteroid(Asteroid& asteroid, Asteroid allAsteroids[GLOBALS::maxAsteroids])
 {
@@ -199,6 +199,10 @@ void ASTEROIDS::SplitAsteroid(Asteroid& asteroid, Asteroid allAsteroids[GLOBALS:
 
 void ASTEROIDS::DrawAsteroid(Asteroid& asteroid)
 {
-	DRAW::DrawSpritePro(static_cast<float>(asteroid.textureID), asteroid.position.x, asteroid.position.y,
-		static_cast<float>(radius * static_cast<int>(asteroid.size)) * 5.0f, static_cast<float>(radius * static_cast<int>(asteroid.size)) * 4.0f, WHITE, asteroid.rotation);
+	float width = UTILS::PixelsToPercentX(static_cast<float>(radius * static_cast<int>(asteroid.size)) * 5.0f);
+	float height = UTILS::PixelsToPercentY(static_cast<float>(radius * static_cast<int>(asteroid.size)) * 4.0f);
+
+	DRAW::DrawSpritePro(static_cast<float>(asteroid.textureID), asteroid.position.x, asteroid.position.y, width,
+		height, WHITE, asteroid.rotation);
+
 }

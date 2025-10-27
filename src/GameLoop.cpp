@@ -2,6 +2,7 @@
 #include "Asteroids.h"
 #include "Spaceship.h"
 #include "Bullets.h"
+#include "Utils.h"
 #include "raylib.h"
 #include <string>
 #include <time.h>
@@ -17,7 +18,8 @@ namespace ESSENTIALS
 	static const std::string title = "Asteroids";
 
 	static void Initialization(Texture& tempTexture, PLAYER::Spaceship& spaceship, int& bigAsteroidTextureID, int& mediumAsteroidTextureID,
-		int& smallAsteroidTextureID, int& firstFrameLaserTextureID, TEXT::Text& score, Sound& shootEffectSound, int& gameHudID);
+		int& smallAsteroidTextureID, int& firstFrameLaserTextureID, TEXT::Text& score, Sound& shootEffectSound, int& gameHudID,
+		Sound& asteroidExplosion);
 
 	static void InitializeWindow();
 
@@ -35,6 +37,8 @@ namespace ESSENTIALS
 	static void SetSeed();
 
 	static void SetWindow();
+
+	static bool HasCollided(PLAYER::Spaceship spaceship, ASTEROIDS::Asteroid asteroid);
 }
 
 namespace SCREEN
@@ -67,7 +71,8 @@ void ASTEROIDS::MainLoop()
 	ESSENTIALS::SetSeed();
 
 	ESSENTIALS::Initialization(ASSETS::tempTexture, OBJECTS::spaceship, EXTERNS::bigAsteroidTextureID, EXTERNS::mediumAsteroidTextureID,
-		EXTERNS::smallAsteroidTextureID, EXTERNS::firstFrameLaserTextureID, ASSETS::score, EXTERNS::shootEffectSound, EXTERNS::gameHudID);
+		EXTERNS::smallAsteroidTextureID, EXTERNS::firstFrameLaserTextureID, ASSETS::score, EXTERNS::shootEffectSound, EXTERNS::gameHudID,
+		EXTERNS::asteroidExplosionSound);
 	ESSENTIALS::SetWindow();
 
 	for (int i = 0; i < 10; i++) //Cambiar!
@@ -123,6 +128,8 @@ void ASTEROIDS::MainLoop()
 
 					OBJECTS::bullets[j].currentLifeSpan = 0.0f;
 
+					PlaySound(EXTERNS::asteroidExplosionSound);
+
 					break;
 				}
 			}
@@ -130,7 +137,7 @@ void ASTEROIDS::MainLoop()
 
 		for (int i = 0; i < GLOBALS::maxAsteroids; i++)
 		{
-			if (ASTEROIDS::HasCollided(OBJECTS::spaceship, OBJECTS::asteroids[i]) && OBJECTS::asteroids[i].isActive)
+			if (ESSENTIALS::HasCollided(OBJECTS::spaceship, OBJECTS::asteroids[i]) && OBJECTS::asteroids[i].isActive)
 			{
 				PLAYER::UpdateLives(OBJECTS::spaceship);
 				PLAYER::ResetSpaceship(OBJECTS::spaceship);
@@ -173,7 +180,8 @@ void ASTEROIDS::MainLoop()
 
 
 void ESSENTIALS::Initialization(Texture& tempTexture, PLAYER::Spaceship& spaceship, int& bigAsteroidTextureID, int& mediumAsteroidTextureID,
-	int& smallAsteroidTextureID, int& firstFrameLaserTextureID, TEXT::Text& score, Sound& shootEffectSound, int& gameHudID)
+	int& smallAsteroidTextureID, int& firstFrameLaserTextureID, TEXT::Text& score, Sound& shootEffectSound, int& gameHudID,
+	Sound& asteroidExplosion)
 {
 	ESSENTIALS::InitializeWindow();
 	InitAudioDevice();
@@ -206,6 +214,8 @@ void ESSENTIALS::Initialization(Texture& tempTexture, PLAYER::Spaceship& spacesh
 	firstFrameLaserTextureID = tempTexture.id;
 
 	shootEffectSound = LoadSound(EXTERNS::shootEffect.c_str());
+
+	asteroidExplosion = LoadSound(EXTERNS::asteroidExplosion.c_str());
 }
 
 void ESSENTIALS::InitializeWindow()
@@ -251,6 +261,29 @@ void ESSENTIALS::SetSeed()
 void ESSENTIALS::SetWindow()
 {
 	SetWindowState(FLAG_WINDOW_RESIZABLE);
+}
+
+bool ESSENTIALS::HasCollided(PLAYER::Spaceship spaceship, ASTEROIDS::Asteroid asteroid)
+{
+	float spaceshipPixelX = UTILS::PercentToPixelsX(spaceship.position.x);
+	float spaceshipPixelY = UTILS::PercentToPixelsY(spaceship.position.y);
+	float asteroidPixelX = UTILS::PercentToPixelsX(asteroid.position.x);
+	float asteroidPixelY = UTILS::PercentToPixelsY(asteroid.position.y);
+
+	float distX = spaceshipPixelX - asteroidPixelX;
+	float distY = spaceshipPixelY - asteroidPixelY;
+	float distanceSquared = (distX * distX) + (distY * distY);
+
+	float asteroidRadius = static_cast<float>(asteroid.radius * static_cast<int>(asteroid.size));
+	float spaceshipRadius = spaceship.radius;
+
+	float sumOfRadius = asteroidRadius + spaceshipRadius;
+	float sumOfRadiusSquared = sumOfRadius * sumOfRadius;
+
+	DrawCircle(static_cast<int>(asteroidPixelX), static_cast<int>(asteroidPixelY), asteroidRadius, RED);
+	DrawCircle(static_cast<int>(spaceshipPixelX), static_cast<int>(spaceshipPixelY), spaceshipRadius, GREEN);
+
+	return distanceSquared <= sumOfRadiusSquared;
 }
 
 void SCREEN::Update(int& screenWidth, int& screenHeight)
