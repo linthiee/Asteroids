@@ -1,4 +1,6 @@
 #include "Spaceship.h"
+#include "raymath.h"
+#include "Globals.h"
 #include "Draw.h"
 
 static float radius = 10.0f;
@@ -21,8 +23,7 @@ void PLAYER::CreateSpaceship(Spaceship& spaceship)
 	spaceship.width = 100.0f;
 	spaceship.height = 100.0f;
 
-	spaceship.maxHealth = 100.0f;
-	spaceship.currentHealth = 100.0f;
+	spaceship.lives = 3;
 
 	spaceship.fireRate = 0.2f;
 	spaceship.currentFireRateCd = 0.0f;
@@ -41,8 +42,10 @@ void PLAYER::SetLookingDirection(Spaceship& spaceship)
 	spaceship.lookingDirection = Vector2Normalize(spaceship.lookingDirection);
 }
 
-void PLAYER::UpdateSpaceship(Spaceship& spaceship)
+void PLAYER::UpdateSpaceship(Spaceship& spaceship, TEXT::Text& score)
 {
+	score.text = "Score: " + std::to_string(spaceship.score);
+
 	PLAYER::SetLookingDirection(spaceship);
 
 	if (IsAccelerating())
@@ -106,8 +109,36 @@ void PLAYER::CheckOutOfBonds(Spaceship& spaceship)
 	}
 }
 
+void PLAYER::UpdateLives(Spaceship& spaceship)
+{
+	spaceship.lives--;
+}
+
+void PLAYER::ResetSpaceship(Spaceship& spaceship)
+{
+	spaceship.position = { static_cast<float>(EXTERNS::screenWidth / 2), static_cast<float>(EXTERNS::screenHeight / 2) };
+	spaceship.lookingDirection = { GetMousePosition().x, GetMousePosition().y };
+	spaceship.velocity = { 0, 0 };
+	spaceship.direction = { 0, 0 };
+
+	spaceship.speed = 300.0f;
+
+	spaceship.fireRate = 0.2f;
+	spaceship.currentFireRateCd = 0.0f;
+
+	spaceship.lookingDirection.y = static_cast<float>(atan2f(spaceship.lookingDirection.y, spaceship.lookingDirection.x));
+}
+
 void PLAYER::DrawSpaceship(Spaceship spaceship)
 {
 	spaceship.lookingDirection.y += 90.0f;
 	DRAW::DrawSpritePro(static_cast<float>(spaceship.textureID), spaceship.position.x, spaceship.position.y, spaceship.width, spaceship.height, WHITE, spaceship.lookingDirection.y);
+}
+
+void PLAYER::DrawLives(Spaceship spaceship)
+{
+	for (int i = 0; i < spaceship.lives; i++)
+	{
+		DRAW::DrawSprite(static_cast<float>(spaceship.textureID), spaceship.width / 7 - (5.0f * i), 3.0f, 6.0f, 6.0f, WHITE);
+	}
 }

@@ -22,6 +22,8 @@ namespace BULLETS
 
 		float speed;
 
+		float radius;
+
 		float angle;
 	};
 

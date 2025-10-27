@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include "Text.h"
 
 namespace EXTERNS
 {
@@ -21,11 +22,19 @@ namespace EXTERNS
 
 	extern std::string firstFrameLaserTexture;
 	extern int firstFrameLaserTextureID;
+
+	extern std::string fontText;
+	extern int font;
+
+	extern TEXT::Text defaultText;
+
 }
 
 namespace GLOBALS
 {
-	const int maxAsteroids = 10;
+	const int maxAsteroids = 100;
 
 	const int asteroidDiversity = 3;
+
+	const int maxLives = 3;
 }

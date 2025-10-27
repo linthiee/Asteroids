@@ -1,7 +1,6 @@
 #pragma once
 #include "raylib.h"
-#include "raymath.h"
-#include "Globals.h"
+#include "Text.h"
 
 namespace PLAYER
 {
@@ -21,8 +20,8 @@ namespace PLAYER
 		float width;
 		float height;
 
-		float maxHealth;
-		float currentHealth;
+		int lives;
+		int score;
 
 		float fireRate;
 		float currentFireRateCd;
@@ -32,11 +31,15 @@ namespace PLAYER
 
 	bool IsAccelerating();
 	void SetLookingDirection(Spaceship& spaceship);
-	void UpdateSpaceship(Spaceship& spaceship);
+	void UpdateSpaceship(Spaceship& spaceship, TEXT::Text& score);
 	void UpdateMovement(Spaceship& spaceship);
 	void UpdatePosition(Spaceship& spaceship);
 	void UpdateLookingDirection(Spaceship& spaceship);
 	void CheckOutOfBonds(Spaceship& spaceship);
 
+	void UpdateLives(Spaceship& spaceship);
+	void ResetSpaceship(Spaceship& spaceship);
+
 	void DrawSpaceship(Spaceship spaceship);
+	void DrawLives(Spaceship spaceship);
 }

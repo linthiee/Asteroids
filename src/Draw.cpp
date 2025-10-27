@@ -43,3 +43,8 @@ void DRAW::DrawSpritePro(float id, float posX, float posY, float width, float he
 
 	DrawTexturePro(texture, source, dest, origin, rotation, color);
 }
+
+void DRAW::DrawText(TEXT::Text text)
+{
+	DrawTextEx(text.font, text.text.c_str(), { (text.posX * EXTERNS::screenWidth / 100.0f) - (MeasureText(text.text.c_str(), text.fonstSize)) / 2.4f, (text.posY * EXTERNS::screenHeight / 100.0f) - (text.fonstSize / 2) }, static_cast<float>(text.fonstSize), static_cast<float>(text.spacing), text.color);
+}

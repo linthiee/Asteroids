@@ -1,7 +1,7 @@
 #pragma once
 #include "raylib.h"
-#include "raymath.h"
-#include "Globals.h"
+#include "Bullets.h"
+#include "Globals.h" 
 
 namespace ASTEROIDS
 {
@@ -28,6 +28,7 @@ namespace ASTEROIDS
 		float speed;
 
 		int size;
+		int score;
 
 		int textureID;
 
@@ -39,6 +40,11 @@ namespace ASTEROIDS
 	void UpdateAsteroid(Asteroid& asteroid);
 	void UpdateMovement(Asteroid& asteroid);
 	void CheckOutOfBonds(Asteroid& asteroid);
+
+	bool HasCollided(BULLETS::Bullets& bullet, Asteroid& asteroid);
+	bool HasCollided(PLAYER::Spaceship spacehsip, Asteroid asteroid);
+
+	void SplitAsteroid(Asteroid& asteroid, Asteroid allAsteroids[GLOBALS::maxAsteroids]);
 
 	void DrawAsteroid(Asteroid& asteroid);
 }

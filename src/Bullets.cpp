@@ -1,5 +1,7 @@
 #include "Bullets.h"
 #include "Draw.h"
+#include "Globals.h" 
+#include "raymath.h"
 
 bool BULLETS::IsShooting()
 {

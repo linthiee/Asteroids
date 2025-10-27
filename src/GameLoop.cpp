@@ -2,11 +2,13 @@
 #include "Asteroids.h"
 #include "Spaceship.h"
 #include "Bullets.h"
-#include "Globals.h"
 #include "raylib.h"
 #include <string>
 #include <time.h>
 #include <vector>
+#include <iostream>
+
+#include "Draw.h"
 
 #pragma region	Game_Essentials_Declarations
 
@@ -14,7 +16,8 @@ namespace ESSENTIALS
 {
 	static const std::string title = "Asteroids";
 
-	static void Initialization(Texture& tempTexture, PLAYER::Spaceship& spaceship, int& bigAsteroidTextureID, int& mediumAsteroidTextureID, int& smallAsteroidTextureID, int& firstFrameLaserTextureID);
+	static void Initialization(Texture& tempTexture, PLAYER::Spaceship& spaceship, int& bigAsteroidTextureID, int& mediumAsteroidTextureID, 
+		int& smallAsteroidTextureID, int& firstFrameLaserTextureID, TEXT::Text& score);
 
 	static void InitializeWindow();
 
@@ -37,6 +40,9 @@ namespace ESSENTIALS
 namespace SCREEN
 {
 	void Update(int& screenWidth, int& screenHeight);
+
+	void DrawHUD();
+	void DrawHUDRec();
 }
 
 #pragma endregion		
@@ -52,6 +58,7 @@ namespace OBJECTS
 namespace ASSETS
 {
 	Texture tempTexture;
+	TEXT::Text score;
 }
 
 void ASTEROIDS::MainLoop()
@@ -60,10 +67,11 @@ void ASTEROIDS::MainLoop()
 
 	ESSENTIALS::SetSeed();
 
-	ESSENTIALS::Initialization(ASSETS::tempTexture, OBJECTS::spaceship, EXTERNS::bigAsteroidTextureID, EXTERNS::mediumAsteroidTextureID, EXTERNS::smallAsteroidTextureID, EXTERNS::firstFrameLaserTextureID);
+	ESSENTIALS::Initialization(ASSETS::tempTexture, OBJECTS::spaceship, EXTERNS::bigAsteroidTextureID, EXTERNS::mediumAsteroidTextureID,
+		EXTERNS::smallAsteroidTextureID, EXTERNS::firstFrameLaserTextureID, ASSETS::score);
 	ESSENTIALS::SetWindow();
 
-	for (int i = 0; i < GLOBALS::maxAsteroids; i++)
+	for (int i = 0; i < 20; i++) //Cambiar!
 	{
 		ASTEROIDS::CreateAsteroid(OBJECTS::asteroids[i]);
 	}
@@ -73,13 +81,14 @@ void ASTEROIDS::MainLoop()
 	while (!ESSENTIALS::IsWindowClosed())
 	{
 		// update
+
 		ESSENTIALS::UpdateDeltaTime();
 		SCREEN::Update(EXTERNS::screenWidth, EXTERNS::screenHeight);
 
-		PLAYER::UpdateSpaceship(OBJECTS::spaceship);
+		PLAYER::UpdateSpaceship(OBJECTS::spaceship, ASSETS::score);
 
 		BULLETS::AssignBulletsOnCreation(OBJECTS::bullets, OBJECTS::spaceship);
-		
+
 		if (OBJECTS::bullets.size() > 0)
 		{
 			for (int i = 0; i < OBJECTS::bullets.size(); i++)
@@ -88,12 +97,48 @@ void ASTEROIDS::MainLoop()
 			}
 		}
 
-		DeleteBullets(OBJECTS::bullets);
+		for (int i = 0; i < GLOBALS::maxAsteroids; i++)
+		{
+			if (OBJECTS::asteroids[i].isActive)
+			{
+				ASTEROIDS::UpdateAsteroid(OBJECTS::asteroids[i]);
+			}
+		}
 
 		for (int i = 0; i < GLOBALS::maxAsteroids; i++)
 		{
-			ASTEROIDS::UpdateAsteroid(OBJECTS::asteroids[i]);
+			if (!OBJECTS::asteroids[i].isActive)
+			{
+				continue;
+			}
+
+			for (int j = 0; j < OBJECTS::bullets.size(); j++)
+			{
+				if (OBJECTS::bullets[j].currentLifeSpan > 0.0f && ASTEROIDS::HasCollided(OBJECTS::bullets[j], OBJECTS::asteroids[i]))
+				{
+					ASTEROIDS::SplitAsteroid(OBJECTS::asteroids[i], OBJECTS::asteroids);
+
+					OBJECTS::asteroids[i].isActive = false;
+
+					OBJECTS::spaceship.score += OBJECTS::asteroids[i].score;
+
+					OBJECTS::bullets[j].currentLifeSpan = 0.0f;
+
+					break;
+				}
+			}
 		}
+
+		for (int i = 0; i < GLOBALS::maxAsteroids; i++)
+		{
+			if (ASTEROIDS::HasCollided(OBJECTS::spaceship, OBJECTS::asteroids[i]) && OBJECTS::asteroids[i].isActive)
+			{
+				PLAYER::UpdateLives(OBJECTS::spaceship);
+				PLAYER::ResetSpaceship(OBJECTS::spaceship);
+			}
+		}
+
+		DeleteBullets(OBJECTS::bullets);
 
 		ESSENTIALS::StartDrawing();
 		ESSENTIALS::BackgroundClear(BLACK);
@@ -112,13 +157,13 @@ void ASTEROIDS::MainLoop()
 
 		for (int i = 0; i < GLOBALS::maxAsteroids; i++)
 		{
-			if (!OBJECTS::asteroids[i].isActive)
+			if (OBJECTS::asteroids[i].isActive)
 			{
-				return;
+				ASTEROIDS::DrawAsteroid(OBJECTS::asteroids[i]);
 			}
-
-			ASTEROIDS::DrawAsteroid(OBJECTS::asteroids[i]);
 		}
+
+		SCREEN::DrawHUD();
 
 		ESSENTIALS::FinishDrawing();
 	}
@@ -128,9 +173,19 @@ void ASTEROIDS::MainLoop()
 #pragma region Game_Essential_Definitions
 
 
-void ESSENTIALS::Initialization(Texture& tempTexture, PLAYER::Spaceship& spaceship, int& bigAsteroidTextureID, int& mediumAsteroidTextureID, int& smallAsteroidTextureID, int& firstFrameLaserTextureID)
+void ESSENTIALS::Initialization(Texture& tempTexture, PLAYER::Spaceship& spaceship, int& bigAsteroidTextureID, int& mediumAsteroidTextureID, 
+	int& smallAsteroidTextureID, int& firstFrameLaserTextureID, TEXT::Text& score)
 {
 	ESSENTIALS::InitializeWindow();
+
+	score.text = "Score: " + std::to_string(spaceship.score);
+
+	EXTERNS::defaultText.font = LoadFont(EXTERNS::fontText.c_str());
+
+	score.font = EXTERNS::defaultText.font;
+
+	score.posX = 90;
+	score.posY = 3;
 
 	tempTexture = LoadTexture(EXTERNS::spaceshipTexture.c_str());
 	spaceship.textureID = tempTexture.id;
@@ -197,5 +252,27 @@ void SCREEN::Update(int& screenWidth, int& screenHeight)
 {
 	screenWidth = GetScreenWidth();
 	screenHeight = GetScreenHeight();
+}
+
+void SCREEN::DrawHUD()
+{
+	DrawHUDRec();
+	PLAYER::DrawLives(OBJECTS::spaceship);
+	DRAW::DrawText(ASSETS::score);
+}
+
+void SCREEN::DrawHUDRec()
+{
+	Rectangle rec
+	{
+		0.0f,
+		0.0f,
+		static_cast<float>(EXTERNS::screenWidth),
+		50.0f,
+	};
+
+	Color color = { 0, 0, 0, 125 };
+
+	DrawRectangleRec(rec, color);
 }
 #pragma endregion
