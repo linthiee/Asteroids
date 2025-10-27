@@ -15,6 +15,8 @@ static float baseSpeed = 0.0f;
 static int minSpeed = 5;
 static int maxSpeed = 7;
 
+static int asteroidsToDivide = 2;
+
 void ASTEROIDS::CreateAsteroid(Asteroid& asteroid)
 {
 	int scores[GLOBALS::asteroidDiversity] = { 100, 250, 350 };
@@ -148,21 +150,18 @@ void ASTEROIDS::SplitAsteroid(Asteroid& asteroid, Asteroid allAsteroids[GLOBALS:
 	AsteroidType newType;
 	AsteroidSize newSize;
 	int newTextureID;
-	int asteroidsToCreate;
 
 	if (asteroid.type == AsteroidType::Large)
 	{
 		newType = AsteroidType::Medium;
 		newSize = AsteroidSize::Medium;
 		newTextureID = EXTERNS::mediumAsteroidTextureID;
-		asteroidsToCreate = 2;
 	}
 	else
 	{
 		newType = AsteroidType::Small;
 		newSize = AsteroidSize::Small;
 		newTextureID = EXTERNS::smallAsteroidTextureID;
-		asteroidsToCreate = 4;
 	}
 
 	int asteroidsSpawmed = 0;
@@ -193,7 +192,7 @@ void ASTEROIDS::SplitAsteroid(Asteroid& asteroid, Asteroid allAsteroids[GLOBALS:
 			asteroidsSpawmed++;
 		}
 
-		if (asteroidsSpawmed >= asteroidsToCreate)
+		if (asteroidsSpawmed >= asteroidsToDivide)
 		{
 			break;
 		}
