@@ -20,6 +20,9 @@ int EXTERNS::smallAsteroidTextureID = 0;
 std::string EXTERNS::firstFrameLaserTexture = "res/img/laser_1.png";;
 int EXTERNS::firstFrameLaserTextureID = 0;
 
+std::string EXTERNS::gameHUD = "res/img/game_HUD.png";;
+int EXTERNS::gameHudID = 0;
+
  std::string EXTERNS::fontText = "res/fonts/Conthrax-SemiBold.otf";
  int EXTERNS::font = 0;
 

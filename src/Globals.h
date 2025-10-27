@@ -23,6 +23,9 @@ namespace EXTERNS
 	extern std::string firstFrameLaserTexture;
 	extern int firstFrameLaserTextureID;
 
+	extern std::string gameHUD;
+	extern int gameHudID;
+
 	extern std::string fontText;
 	extern int font;
 

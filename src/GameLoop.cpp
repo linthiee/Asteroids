@@ -17,7 +17,7 @@ namespace ESSENTIALS
 	static const std::string title = "Asteroids";
 
 	static void Initialization(Texture& tempTexture, PLAYER::Spaceship& spaceship, int& bigAsteroidTextureID, int& mediumAsteroidTextureID,
-		int& smallAsteroidTextureID, int& firstFrameLaserTextureID, TEXT::Text& score, Sound& shootEffectSound);
+		int& smallAsteroidTextureID, int& firstFrameLaserTextureID, TEXT::Text& score, Sound& shootEffectSound, int& gameHudID);
 
 	static void InitializeWindow();
 
@@ -42,7 +42,6 @@ namespace SCREEN
 	void Update(int& screenWidth, int& screenHeight);
 
 	void DrawHUD();
-	void DrawHUDRec();
 }
 
 #pragma endregion		
@@ -68,7 +67,7 @@ void ASTEROIDS::MainLoop()
 	ESSENTIALS::SetSeed();
 
 	ESSENTIALS::Initialization(ASSETS::tempTexture, OBJECTS::spaceship, EXTERNS::bigAsteroidTextureID, EXTERNS::mediumAsteroidTextureID,
-		EXTERNS::smallAsteroidTextureID, EXTERNS::firstFrameLaserTextureID, ASSETS::score, EXTERNS::shootEffectSound);
+		EXTERNS::smallAsteroidTextureID, EXTERNS::firstFrameLaserTextureID, ASSETS::score, EXTERNS::shootEffectSound, EXTERNS::gameHudID);
 	ESSENTIALS::SetWindow();
 
 	for (int i = 0; i < 10; i++) //Cambiar!
@@ -174,7 +173,7 @@ void ASTEROIDS::MainLoop()
 
 
 void ESSENTIALS::Initialization(Texture& tempTexture, PLAYER::Spaceship& spaceship, int& bigAsteroidTextureID, int& mediumAsteroidTextureID,
-	int& smallAsteroidTextureID, int& firstFrameLaserTextureID, TEXT::Text& score, Sound& shootEffectSound)
+	int& smallAsteroidTextureID, int& firstFrameLaserTextureID, TEXT::Text& score, Sound& shootEffectSound, int& gameHudID)
 {
 	ESSENTIALS::InitializeWindow();
 	InitAudioDevice();
@@ -199,6 +198,9 @@ void ESSENTIALS::Initialization(Texture& tempTexture, PLAYER::Spaceship& spacesh
 
 	tempTexture = LoadTexture(EXTERNS::smallAsteroidTexture.c_str());
 	smallAsteroidTextureID = tempTexture.id;
+
+	tempTexture = LoadTexture(EXTERNS::gameHUD.c_str());
+	gameHudID = tempTexture.id;
 
 	tempTexture = LoadTexture(EXTERNS::firstFrameLaserTexture.c_str());
 	firstFrameLaserTextureID = tempTexture.id;
@@ -259,23 +261,8 @@ void SCREEN::Update(int& screenWidth, int& screenHeight)
 
 void SCREEN::DrawHUD()
 {
-	DrawHUDRec();
+	DRAW::DrawSprite(static_cast<float>(EXTERNS::gameHudID), 50.0f, 50.0f, 100.0f, 100.0f, WHITE);
 	PLAYER::DrawLives(OBJECTS::spaceship);
 	DRAW::DrawText(ASSETS::score);
-}
-
-void SCREEN::DrawHUDRec()
-{
-	Rectangle rec
-	{
-		0.0f,
-		0.0f,
-		static_cast<float>(EXTERNS::screenWidth),
-		50.0f,
-	};
-
-	Color color = { 0, 0, 0, 125 };
-
-	DrawRectangleRec(rec, color);
 }
 #pragma endregion

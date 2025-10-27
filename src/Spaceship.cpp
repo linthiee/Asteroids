@@ -141,6 +141,6 @@ void PLAYER::DrawLives(Spaceship spaceship)
 {
 	for (int i = 0; i < spaceship.lives; i++)
 	{
-		DRAW::DrawSprite(static_cast<float>(spaceship.textureID), spaceship.width / 7 - (5.0f * i), 3.0f, 6.0f, 6.0f, WHITE);
+		DRAW::DrawSprite(static_cast<float>(spaceship.textureID), spaceship.width / 8 - (4.0f * i), 2.0f, 5.0f, 5.0f, WHITE);
 	}
 }

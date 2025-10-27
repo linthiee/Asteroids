@@ -26,7 +26,6 @@
     <ClCompile Include="src\Globals.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Spaceship.cpp" />
-    <ClCompile Include="Utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Asteroids.h" />
@@ -36,7 +35,6 @@
     <ClInclude Include="src\Globals.h" />
     <ClInclude Include="src\Spaceship.h" />
     <ClInclude Include="src\Text.h" />
-    <ClInclude Include="Utils.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
