@@ -23,6 +23,8 @@ namespace PLAYER
 		int lives;
 		int score;
 
+		float radius;
+
 		float fireRate;
 		float currentFireRateCd;
 	};

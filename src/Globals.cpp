@@ -24,3 +24,6 @@ int EXTERNS::firstFrameLaserTextureID = 0;
  int EXTERNS::font = 0;
 
  TEXT::Text EXTERNS::defaultText;
+
+ std::string  EXTERNS::shootEffect = "res/sound/spaceship_shot.wav";
+ Sound EXTERNS::shootEffectSound;

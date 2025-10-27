@@ -12,6 +12,8 @@ void BULLETS::AssignBulletsOnCreation(std::vector<Bullets>& bullets, PLAYER::Spa
 {
 	if (IsShooting() && spaceship.currentFireRateCd <= 0.0f)
 	{
+		PlaySound(EXTERNS::shootEffectSound);
+
 		BULLETS::Bullets newBullet;
 
 		BULLETS::CreateBullet(newBullet, spaceship);
@@ -28,6 +30,8 @@ void BULLETS::CreateBullet(Bullets& bullet, PLAYER::Spaceship spaceship)
 
 	bullet.height = 80.0f;
 	bullet.width = 50.0f;
+
+	bullet.radius = 5.0f;
 
 	Vector2 mousePos = GetMousePosition();
 	bullet.direction = Vector2Subtract(mousePos, spaceship.position);

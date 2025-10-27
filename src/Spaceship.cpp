@@ -25,7 +25,9 @@ void PLAYER::CreateSpaceship(Spaceship& spaceship)
 
 	spaceship.lives = 3;
 
-	spaceship.fireRate = 0.2f;
+	spaceship.radius = 20.0f;
+
+	spaceship.fireRate = 0.4f;
 	spaceship.currentFireRateCd = 0.0f;
 
 	spaceship.lookingDirection.y = static_cast<float>(atan2f(spaceship.lookingDirection.y, spaceship.lookingDirection.x));
@@ -123,7 +125,7 @@ void PLAYER::ResetSpaceship(Spaceship& spaceship)
 
 	spaceship.speed = 300.0f;
 
-	spaceship.fireRate = 0.2f;
+	spaceship.fireRate = 0.4f;
 	spaceship.currentFireRateCd = 0.0f;
 
 	spaceship.lookingDirection.y = static_cast<float>(atan2f(spaceship.lookingDirection.y, spaceship.lookingDirection.x));

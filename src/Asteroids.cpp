@@ -116,25 +116,23 @@ bool ASTEROIDS::HasCollided(BULLETS::Bullets& bullet, Asteroid& asteroid)
 	float distance = (distX * distX) + (distY * distY);
 
 	float asteroidRadius = static_cast<float>(radius * static_cast<int>(asteroid.size));
-	float bulletRadius = sqrtf(bullet.width + bullet.height) * 0.5f;
-	float sum = asteroidRadius + bulletRadius;
+	float sum = asteroidRadius + bullet.radius;
 
 	return distance <= (sum * sum);
 }
 
-bool ASTEROIDS::HasCollided(PLAYER::Spaceship spacehsip, Asteroid asteroid)
+bool ASTEROIDS::HasCollided(PLAYER::Spaceship spaceship, Asteroid asteroid)
 {
-	float distX = spacehsip.position.x - asteroid.position.x;
-	float distY = spacehsip.position.y - asteroid.position.y;
+	float distX = spaceship.position.x - asteroid.position.x;
+	float distY = spaceship.position.y - asteroid.position.y;
 
 	float distance = (distX * distX) + (distY * distY);
 
 	float asteroidRadius = static_cast<float>(radius * static_cast<int>(asteroid.size));
-	float spaceshipRadius = sqrtf(spacehsip.width + spacehsip.height) * 2.0f;
-	float sum = asteroidRadius + spaceshipRadius;
+	float sum = asteroidRadius + spaceship.radius;
 
 	DrawCircle(static_cast<int>(asteroid.position.x), static_cast<int>(asteroid.position.y), asteroidRadius, RED);
-	DrawCircle(static_cast<int>(spacehsip.position.x), static_cast<int>(spacehsip.position.y), spaceshipRadius, GREEN);
+	DrawCircle(static_cast<int>(spaceship.position.x), static_cast<int>(spaceship.position.y), spaceship.radius, GREEN);
 
 	return distance <= (sum * sum);
 }

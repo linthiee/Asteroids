@@ -16,8 +16,8 @@ namespace ESSENTIALS
 {
 	static const std::string title = "Asteroids";
 
-	static void Initialization(Texture& tempTexture, PLAYER::Spaceship& spaceship, int& bigAsteroidTextureID, int& mediumAsteroidTextureID, 
-		int& smallAsteroidTextureID, int& firstFrameLaserTextureID, TEXT::Text& score);
+	static void Initialization(Texture& tempTexture, PLAYER::Spaceship& spaceship, int& bigAsteroidTextureID, int& mediumAsteroidTextureID,
+		int& smallAsteroidTextureID, int& firstFrameLaserTextureID, TEXT::Text& score, Sound& shootEffectSound);
 
 	static void InitializeWindow();
 
@@ -68,10 +68,10 @@ void ASTEROIDS::MainLoop()
 	ESSENTIALS::SetSeed();
 
 	ESSENTIALS::Initialization(ASSETS::tempTexture, OBJECTS::spaceship, EXTERNS::bigAsteroidTextureID, EXTERNS::mediumAsteroidTextureID,
-		EXTERNS::smallAsteroidTextureID, EXTERNS::firstFrameLaserTextureID, ASSETS::score);
+		EXTERNS::smallAsteroidTextureID, EXTERNS::firstFrameLaserTextureID, ASSETS::score, EXTERNS::shootEffectSound);
 	ESSENTIALS::SetWindow();
 
-	for (int i = 0; i < 20; i++) //Cambiar!
+	for (int i = 0; i < 10; i++) //Cambiar!
 	{
 		ASTEROIDS::CreateAsteroid(OBJECTS::asteroids[i]);
 	}
@@ -173,10 +173,11 @@ void ASTEROIDS::MainLoop()
 #pragma region Game_Essential_Definitions
 
 
-void ESSENTIALS::Initialization(Texture& tempTexture, PLAYER::Spaceship& spaceship, int& bigAsteroidTextureID, int& mediumAsteroidTextureID, 
-	int& smallAsteroidTextureID, int& firstFrameLaserTextureID, TEXT::Text& score)
+void ESSENTIALS::Initialization(Texture& tempTexture, PLAYER::Spaceship& spaceship, int& bigAsteroidTextureID, int& mediumAsteroidTextureID,
+	int& smallAsteroidTextureID, int& firstFrameLaserTextureID, TEXT::Text& score, Sound& shootEffectSound)
 {
 	ESSENTIALS::InitializeWindow();
+	InitAudioDevice();
 
 	score.text = "Score: " + std::to_string(spaceship.score);
 
@@ -201,6 +202,8 @@ void ESSENTIALS::Initialization(Texture& tempTexture, PLAYER::Spaceship& spacesh
 
 	tempTexture = LoadTexture(EXTERNS::firstFrameLaserTexture.c_str());
 	firstFrameLaserTextureID = tempTexture.id;
+
+	shootEffectSound = LoadSound(EXTERNS::shootEffect.c_str());
 }
 
 void ESSENTIALS::InitializeWindow()

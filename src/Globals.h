@@ -28,6 +28,8 @@ namespace EXTERNS
 
 	extern TEXT::Text defaultText;
 
+	extern std::string shootEffect;
+	extern Sound shootEffectSound;
 }
 
 namespace GLOBALS
