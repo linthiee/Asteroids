@@ -2,6 +2,7 @@
 #include "raylib.h"
 #include "Bullets.h"
 #include "Globals.h" 
+#include "Spaceship.h" 
 
 namespace ASTEROIDS
 {
@@ -38,9 +39,10 @@ namespace ASTEROIDS
 	};
 
 	void CreateAsteroid(Asteroid& asteroid);
+	void SpawnInSafeZone(Asteroid& asteroid);
 
-	void UpdateAsteroid(Asteroid& asteroid);
-	void UpdateMovement(Asteroid& asteroid);
+	void UpdateAsteroid(Asteroid& asteroid, PLAYER::Spaceship spaceship);
+	void UpdateMovement(Asteroid& asteroid, PLAYER::Spaceship spaceship);
 	void CheckOutOfBonds(Asteroid& asteroid);
 
 	bool HasCollided(BULLETS::Bullets& bullet, Asteroid& asteroid);

@@ -14,8 +14,8 @@ static int rotationDegree = 360;
 static float baseSpeed = 0.0f;
 
 static int minSpeed = 5;
-static int maxSpeed = 7;
-
+static int maxSpeed = 15;
+ 
 static int asteroidsToDivide = 2;
 
 void ASTEROIDS::CreateAsteroid(Asteroid& asteroid)
@@ -27,7 +27,7 @@ void ASTEROIDS::CreateAsteroid(Asteroid& asteroid)
 	//asteroid.type = AsteroidType::Large;
 	asteroid.type = static_cast<AsteroidType>(GetRandomValue(static_cast<int>(AsteroidType::Small), static_cast<int>(AsteroidType::Large)));
 
-	asteroid.radius = 5.0f;
+	asteroid.radius = 10.0f;
 
 	switch (asteroid.type)
 	{
@@ -66,8 +66,7 @@ void ASTEROIDS::CreateAsteroid(Asteroid& asteroid)
 
 	asteroid.isActive = true;
 
-	asteroid.position.x = static_cast<float>(GetRandomValue(0, 100));
-	asteroid.position.y = static_cast<float>(GetRandomValue(0, 100));
+	SpawnInSafeZone(asteroid);
 
 	asteroid.velocity = { baseSpeed * speedFactor , baseSpeed * speedFactor };
 
@@ -79,18 +78,42 @@ void ASTEROIDS::CreateAsteroid(Asteroid& asteroid)
 	asteroid.speed = static_cast<float>(GetRandomValue(minRotationSpeed, maxRotationSpeed));
 }
 
-void ASTEROIDS::UpdateAsteroid(Asteroid& asteroid)
+void ASTEROIDS::SpawnInSafeZone(Asteroid& asteroid)
 {
-	ASTEROIDS::UpdateMovement(asteroid);
+	Vector2 center = { 50.0f, 50.0f };
+	float safeZoneRadius = 25.0f;
+	float maxSpawnRadius = 50.0f;
+
+	float spawnRadius = static_cast<float>(GetRandomValue(static_cast<int>(safeZoneRadius), static_cast<int>(maxSpawnRadius)));
+	float spawnAngle = static_cast<float>(GetRandomValue(0, rotationDegree) * DEG2RAD);
+
+	float finalX = (cosf(spawnAngle) * spawnRadius) + center.x;
+	float finalY = (sinf(spawnAngle) * spawnRadius) + center.y;
+
+	asteroid.position = { finalX, finalY };
+}
+
+void ASTEROIDS::UpdateAsteroid(Asteroid& asteroid, PLAYER::Spaceship spaceship)
+{
+	ASTEROIDS::UpdateMovement(asteroid, spaceship);
 	ASTEROIDS::CheckOutOfBonds(asteroid);
 }
 
-void ASTEROIDS::UpdateMovement(Asteroid& asteroid)
+void ASTEROIDS::UpdateMovement(Asteroid& asteroid, PLAYER::Spaceship spaceship)
 {
-	Vector2 velocityPercent = { (asteroid.velocity.x / EXTERNS::screenWidth) * 100.0f, (asteroid.velocity.y / EXTERNS::screenHeight) * 100.0f };
+	float speedFactor = 1.0f;
 
-	asteroid.position = Vector2Add(asteroid.position, Vector2Scale(velocityPercent, EXTERNS::deltaT));
-	asteroid.rotation += asteroid.speed * EXTERNS::deltaT;
+	if (spaceship.hasSlow)
+	{
+		speedFactor = 0.3f;
+	}
+
+	Vector2	velocityPercent = { (asteroid.velocity.x / EXTERNS::screenWidth) * 100.0f, (asteroid.velocity.y / EXTERNS::screenHeight) * 100.0f };
+
+	asteroid.position = Vector2Add(asteroid.position, Vector2Scale(velocityPercent, EXTERNS::deltaT * speedFactor));
+
+	asteroid.rotation += asteroid.speed * EXTERNS::deltaT * speedFactor;
+
 }
 
 void ASTEROIDS::CheckOutOfBonds(Asteroid& asteroid)
@@ -102,11 +125,11 @@ void ASTEROIDS::CheckOutOfBonds(Asteroid& asteroid)
 
 	if (asteroid.position.x - radiusPercentX > 100.0f)
 	{
-		asteroid.position.x = 0.0f - radiusPercentX; 
+		asteroid.position.x = 0.0f - radiusPercentX;
 	}
 	if (asteroid.position.x + radiusPercentX < 0.0f)
 	{
-		asteroid.position.x = 100.0f + radiusPercentX; 
+		asteroid.position.x = 100.0f + radiusPercentX;
 	}
 	if (asteroid.position.y - radiusPercentY > 100.0f)
 	{

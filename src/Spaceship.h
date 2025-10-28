@@ -1,11 +1,16 @@
 #pragma once
 #include "raylib.h"
+#include "PowerUp.h"
 #include "Text.h"
 
 namespace PLAYER
 {
 	struct Spaceship
 	{
+		POWERUP::PowerUps powerUp;
+
+		Color color;
+
 		Texture texture;
 		int textureID;
 
@@ -14,6 +19,10 @@ namespace PLAYER
 		Vector2 position;
 		Vector2 velocity;
 		Vector2 lastValidAimDir;
+
+		bool isShotgunActive;
+		bool isInvincible;
+		bool hasSlow;
 
 		float speed;
 
@@ -41,6 +50,12 @@ namespace PLAYER
 
 	void UpdateLives(Spaceship& spaceship);
 	void ResetSpaceship(Spaceship& spaceship);
+
+	bool CollectedPowerUp(Spaceship spaceship);
+	void ApplyPowerUp(Spaceship& spaceship);
+
+
+	void UpdatePowerUp(Spaceship& spaceship);
 
 	void DrawSpaceship(Spaceship spaceship);
 	void DrawLives(Spaceship spaceship);

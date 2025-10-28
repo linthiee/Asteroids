@@ -25,6 +25,7 @@
     <ClCompile Include="src\GameLoop.cpp" />
     <ClCompile Include="src\Globals.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\PowerUp.cpp" />
     <ClCompile Include="src\Spaceship.cpp" />
     <ClCompile Include="src\Utils.cpp" />
   </ItemGroup>
@@ -34,6 +35,7 @@
     <ClInclude Include="src\Draw.h" />
     <ClInclude Include="src\GameLoop.h" />
     <ClInclude Include="src\Globals.h" />
+    <ClInclude Include="src\PowerUp.h" />
     <ClInclude Include="src\Spaceship.h" />
     <ClInclude Include="src\Text.h" />
     <ClInclude Include="src\Utils.h" />

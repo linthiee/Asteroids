@@ -12,6 +12,8 @@ static int maxRotationSpeed = 240;
 
 static int rotationDegree = 360;
 
+static float timerToDespawn = 15.0f;
+
 static Vector2 mousePercent = { 0, 0 };
 
 void PLAYER::CreateSpaceship(Spaceship& spaceship)
@@ -25,6 +27,12 @@ void PLAYER::CreateSpaceship(Spaceship& spaceship)
 	spaceship.direction = { 0, 0 };
 
 	spaceship.speed = 300.0f;
+
+	spaceship.color = WHITE;
+
+	spaceship.isShotgunActive = false;
+	spaceship.isInvincible = false;
+	spaceship.hasSlow = false;
 
 	spaceship.width = 100.0f;
 	spaceship.height = 100.0f;
@@ -139,6 +147,12 @@ void PLAYER::ResetSpaceship(Spaceship& spaceship)
 	spaceship.velocity = { 0, 0 };
 	spaceship.direction = { 0, 0 };
 
+	spaceship.color = WHITE;
+
+	spaceship.isShotgunActive = false;
+	spaceship.isInvincible = false;
+	spaceship.hasSlow = false;
+
 	spaceship.speed = 300.0f;
 
 	spaceship.fireRate = 0.4f;
@@ -147,13 +161,127 @@ void PLAYER::ResetSpaceship(Spaceship& spaceship)
 	spaceship.lookingDirection.y = static_cast<float>(atan2f(spaceship.lookingDirection.y, spaceship.lookingDirection.x));
 }
 
+bool PLAYER::CollectedPowerUp(Spaceship spaceship)
+{
+	float spaceshipPixelX = UTILS::PercentToPixelsX(spaceship.position.x);
+	float spaceshipPixelY = UTILS::PercentToPixelsY(spaceship.position.y);
+	float powerUpPixelX = UTILS::PercentToPixelsX(spaceship.powerUp.position.x);
+	float powerUpPixelY = UTILS::PercentToPixelsY(spaceship.powerUp.position.y);
+
+	float distX = spaceshipPixelX - powerUpPixelX;
+	float distY = spaceshipPixelY - powerUpPixelY;
+	float distanceSquared = (distX * distX) + (distY * distY);
+
+	float powerUpRadius = spaceship.powerUp.radius;
+	float spaceshipRadius = spaceship.radius;
+
+	float sumOfRadius = spaceshipRadius + powerUpRadius;
+	float sumOfRadiusSquared = sumOfRadius * sumOfRadius;
+
+	return distanceSquared <= sumOfRadiusSquared;
+}
+
+void PLAYER::ApplyPowerUp(Spaceship& spaceship)
+{
+	if (CollectedPowerUp(spaceship))
+	{
+
+		if (spaceship.powerUp.isActive && !spaceship.powerUp.isCollected && CollectedPowerUp(spaceship))
+		{
+			spaceship.powerUp.isCollected = true;
+
+			switch (spaceship.powerUp.type)
+			{
+			case POWERUP::PowerUpType::ShotGun:
+
+				SetSoundVolume(EXTERNS::powerUpShotgunSound, 0.5);
+				PlaySound(EXTERNS::powerUpShotgunSound);
+				spaceship.isShotgunActive = true;
+
+				break;
+
+			case POWERUP::PowerUpType::Invincible:
+
+				SetSoundVolume(EXTERNS::powerUpInvencibleSound, 0.5);
+				PlaySound(EXTERNS::powerUpInvencibleSound);
+				spaceship.isInvincible = true;
+				spaceship.color = GOLD;
+
+				break;
+
+			case POWERUP::PowerUpType::Slow:
+
+				SetSoundVolume(EXTERNS::powerUpSlowSound, 0.5);
+				PlaySound(EXTERNS::powerUpSlowSound);
+				spaceship.hasSlow = true;
+
+				break;
+			}
+		}
+	}
+}
+
+void PLAYER::UpdatePowerUp(Spaceship& spaceship)
+{
+	if (!spaceship.powerUp.anyActive)
+	{
+		return;
+	}
+
+	if (spaceship.powerUp.isActive && !spaceship.powerUp.isCollected)
+	{
+		spaceship.powerUp.activeTime += EXTERNS::deltaT;
+
+		if (spaceship.powerUp.activeTime >= timerToDespawn)
+		{
+			spaceship.powerUp.isActive = false;
+			spaceship.powerUp.anyActive = false;
+			spaceship.powerUp.activeTime = 0.0f;
+		}
+	}
+
+	if (spaceship.powerUp.isCollected)
+	{
+		spaceship.powerUp.currentDuration -= EXTERNS::deltaT;
+
+		if (spaceship.powerUp.currentDuration <= 0.0f)
+		{
+			spaceship.powerUp.isActive = false;
+			spaceship.powerUp.anyActive = false;
+			spaceship.powerUp.currentDuration = spaceship.powerUp.duration;
+
+			switch (spaceship.powerUp.type)
+			{
+			case POWERUP::PowerUpType::ShotGun:
+
+				spaceship.isShotgunActive = false;
+
+				break;
+
+			case POWERUP::PowerUpType::Invincible:
+
+				spaceship.color = WHITE;
+				spaceship.isInvincible = false;
+
+				break;
+
+			case POWERUP::PowerUpType::Slow:
+
+				spaceship.hasSlow = false;
+
+				break;
+			}
+
+		}
+	}
+}
 void PLAYER::DrawSpaceship(Spaceship spaceship)
 {
 	float width = UTILS::PixelsToPercentX(static_cast<float>(spaceship.width));
 	float height = UTILS::PixelsToPercentY(static_cast<float>(spaceship.height));
 
 	spaceship.lookingDirection.y += 90.0f;
-	DRAW::DrawSpritePro(static_cast<float>(spaceship.textureID), spaceship.position.x, spaceship.position.y, width, height, WHITE, spaceship.lookingDirection.y);
+	DRAW::DrawSpritePro(static_cast<float>(spaceship.textureID), spaceship.position.x, spaceship.position.y, width, height, spaceship.color, spaceship.lookingDirection.y);
 }
 
 void PLAYER::DrawLives(Spaceship spaceship)

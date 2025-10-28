@@ -5,6 +5,7 @@
 #include "Utils.h"
 
 static Vector2 mousePercent;
+static float spread = 15.0f * DEG2RAD;
 
 bool BULLETS::IsShooting()
 {
@@ -15,42 +16,70 @@ void BULLETS::AssignBulletsOnCreation(std::vector<Bullets>& bullets, PLAYER::Spa
 {
 	if (IsShooting() && spaceship.currentFireRateCd <= 0.0f)
 	{
-		PlaySound(EXTERNS::shootEffectSound);
+		if (spaceship.isShotgunActive)
+		{
+			PlaySound(EXTERNS::shotgunShotSound);
 
-		BULLETS::Bullets newBullet;
+			mousePercent = { UTILS::PixelsToPercentX(GetMousePosition().x), UTILS::PixelsToPercentY(GetMousePosition().y) };
+			Vector2 centerDirection = Vector2Subtract(mousePercent, spaceship.position);
 
-		BULLETS::CreateBullet(newBullet, spaceship);
+			Vector2 leftDirection = Vector2Rotate(centerDirection, -spread);
+			Vector2 rightDirection = Vector2Rotate(centerDirection, spread);
 
-		bullets.push_back(newBullet);
+			BULLETS::Bullets bulletCenter;
+			BULLETS::Bullets bulletLeft;
+			BULLETS::Bullets bulletRight;
 
-		spaceship.currentFireRateCd = spaceship.fireRate;
+			CreateBulletWithDirection(bulletCenter, spaceship, centerDirection);
+			CreateBulletWithDirection(bulletLeft, spaceship, leftDirection);
+			CreateBulletWithDirection(bulletRight, spaceship, rightDirection);
+
+			bullets.push_back(bulletCenter);
+			bullets.push_back(bulletLeft);
+			bullets.push_back(bulletRight);
+
+			spaceship.currentFireRateCd = spaceship.fireRate * 2.5f;
+		}
+		else
+		{
+			PlaySound(EXTERNS::shootEffectSound);
+
+			BULLETS::Bullets newBullet;
+			BULLETS::CreateBullet(newBullet, spaceship); 
+			bullets.push_back(newBullet);
+
+			spaceship.currentFireRateCd = spaceship.fireRate;
+		}
 	}
 }
 
-void BULLETS::CreateBullet(Bullets& bullet, PLAYER::Spaceship spaceship)
+void BULLETS::CreateBulletWithDirection(Bullets& bullet, PLAYER::Spaceship spaceship, Vector2 direction)
 {
 	bullet.textureID = EXTERNS::firstFrameLaserTextureID;
-
 	bullet.height = 80.0f;
 	bullet.width = 50.0f;
-
 	bullet.radius = 5.0f;
 
-	mousePercent = { UTILS::PixelsToPercentX(GetMousePosition().x), UTILS::PixelsToPercentY(GetMousePosition().y) };
-
-	bullet.direction = Vector2Subtract(mousePercent, spaceship.position);
-	bullet.direction = Vector2Normalize(bullet.direction);
+	bullet.direction = Vector2Normalize(direction);
 
 	float shipTipOffset = UTILS::PixelsToPercentY(spaceship.height / 2);
 	bullet.position = Vector2Add(spaceship.position, Vector2Scale(bullet.direction, shipTipOffset));
 
-	bullet.speed = 100.0f; 
+	bullet.speed = 100.0f;
 	bullet.velocity = { bullet.direction.x * bullet.speed, bullet.direction.y * bullet.speed };
 
 	bullet.lifeSpan = 1.0f;
 	bullet.currentLifeSpan = bullet.lifeSpan;
 
 	bullet.angle = atan2f(bullet.direction.y, bullet.direction.x) * RAD2DEG;
+}
+
+void BULLETS::CreateBullet(Bullets& bullet, PLAYER::Spaceship spaceship)
+{
+	mousePercent = { UTILS::PixelsToPercentX(GetMousePosition().x), UTILS::PixelsToPercentY(GetMousePosition().y) };
+	Vector2 directionToMouse = Vector2Subtract(mousePercent, spaceship.position);
+
+	CreateBulletWithDirection(bullet, spaceship, directionToMouse);
 }
 
 void BULLETS::UpdateBullet(Bullets& bullet)

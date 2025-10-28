@@ -30,8 +30,10 @@ namespace BULLETS
 	bool IsShooting();
 
 	void AssignBulletsOnCreation(std::vector<Bullets>& bullets, PLAYER::Spaceship& spaceship);
-	
+	void CreateBulletWithDirection(Bullets& bullet, PLAYER::Spaceship spaceship,
+		Vector2 direction);
 	void CreateBullet(Bullets& bullet, PLAYER::Spaceship spaceship);
+	
 	void UpdateBullet(Bullets& bullet);
 	void DrawBullet(Bullets bullet);
 	

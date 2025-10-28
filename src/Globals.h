@@ -36,6 +36,27 @@ namespace EXTERNS
 
 	extern std::string asteroidExplosion;
 	extern Sound asteroidExplosionSound;
+
+	extern std::string shotgunShot;
+	extern Sound shotgunShotSound;
+
+	extern std::string powerUpShotgun;
+	extern Sound powerUpShotgunSound;
+
+	extern std::string powerUpSlow;
+	extern Sound powerUpSlowSound;
+
+	extern std::string powerUpInvencible;
+	extern Sound powerUpInvencibleSound;
+
+	extern double timer;
+
+	extern int initialMaxAsteroidsOnScreen;  
+	extern int maxAsteroidsOnScreen;
+	extern float spawnTime;       
+	extern float timerSpawn;
+	extern float timerToIncreaseDifficulty; 
+	extern float difficultyTimer;
 }
 
 namespace GLOBALS

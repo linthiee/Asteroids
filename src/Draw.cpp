@@ -21,8 +21,8 @@ void DRAW::DrawSpritePro(float id, float posX, float posY, float width, float he
     Texture texture;
 
     texture.id = static_cast<unsigned int>(id);
-    texture.width = static_cast<int>(width * (static_cast<float>(EXTERNS::screenWidth) / 100.0f));
-    texture.height = static_cast<int>(height * (static_cast<float>(EXTERNS::screenHeight) / 100.0f));
+    texture.width = static_cast<int>(width);
+    texture.height = static_cast<int>(height);
 
     Rectangle source = { 0, 0, (float)texture.width, (float)texture.height };
 
