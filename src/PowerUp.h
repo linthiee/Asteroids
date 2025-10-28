@@ -16,6 +16,8 @@ namespace POWERUP
 		bool isCollected;
 		bool anyActive;
 
+		Color color;
+
 		Vector2 position;
 
 		float duration;

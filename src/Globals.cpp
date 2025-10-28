@@ -5,23 +5,34 @@ float EXTERNS::deltaT;
 int EXTERNS::screenWidth = 1024;
 int EXTERNS::screenHeight = 768;
 
-std::string EXTERNS::spaceshipTexture = "res/img/spaceship.png";;
+std::string EXTERNS::spaceshipTexture = "res/img/spaceship.png";
 int EXTERNS::spaceshipTextureID = 0;
 
-std::string EXTERNS::bigAsteroidTexture = "res/img/big_asteroid.png";;
+std::string EXTERNS::bigAsteroidTexture = "res/img/big_asteroid.png";
 int EXTERNS::bigAsteroidTextureID = 0;
 
-std::string EXTERNS::mediumAsteroidTexture = "res/img/medium_asteroid.png";;
+std::string EXTERNS::mediumAsteroidTexture = "res/img/medium_asteroid.png";
 int EXTERNS::mediumAsteroidTextureID = 0;
 
-std::string EXTERNS::smallAsteroidTexture = "res/img/small_asteroid.png";;
+std::string EXTERNS::smallAsteroidTexture = "res/img/small_asteroid.png";
 int EXTERNS::smallAsteroidTextureID = 0;
 
-std::string EXTERNS::firstFrameLaserTexture = "res/img/laser_1.png";;
+std::string EXTERNS::firstFrameLaserTexture = "res/img/laser_1.png";
 int EXTERNS::firstFrameLaserTextureID = 0;
+
+std::string EXTERNS::bombTexture = "res/img/bomb.png";
+int EXTERNS::bombTextureID = 0;
+
+std::string EXTERNS::backgroundTexture = "res/img/background_space.png";
+int EXTERNS::backgroundTextureID = 0;
 
 std::string EXTERNS::gameHUD = "res/img/game_HUD.png";;
 int EXTERNS::gameHudID = 0;
+
+std::string EXTERNS::powerUpTexture = "res/img/powerup_img.png";;
+int EXTERNS::powerUpTextureID = 0;
+
+std::string EXTERNS::explosionTexture = "res/img/explosion.png";;
 
  std::string EXTERNS::fontText = "res/fonts/Conthrax-SemiBold.otf";
  int EXTERNS::font = 0;

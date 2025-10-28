@@ -23,8 +23,19 @@ namespace EXTERNS
 	extern std::string firstFrameLaserTexture;
 	extern int firstFrameLaserTextureID;
 
+	extern std::string bombTexture;
+	extern int bombTextureID;
+
+	extern std::string backgroundTexture;
+	extern int backgroundTextureID;
+
 	extern std::string gameHUD;
 	extern int gameHudID;
+
+	extern std::string powerUpTexture;
+	extern int powerUpTextureID;
+
+	extern std::string explosionTexture;
 
 	extern std::string fontText;
 	extern int font;
@@ -66,4 +77,6 @@ namespace GLOBALS
 	const int asteroidDiversity = 3;
 
 	const int maxLives = 3;
+
+	const int maxExplosions = 20;
 }

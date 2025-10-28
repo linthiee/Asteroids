@@ -2,6 +2,9 @@
 #include "Asteroids.h"
 #include "Spaceship.h"
 #include "Bullets.h"
+#include "Bomb.h"
+#include "Explosion.h"
+
 #include "Utils.h"
 #include "raylib.h"
 #include <string>
@@ -20,7 +23,8 @@ namespace ESSENTIALS
 
 	static void Initialization(Texture& tempTexture, PLAYER::Spaceship& spaceship, int& bigAsteroidTextureID, int& mediumAsteroidTextureID,
 		int& smallAsteroidTextureID, int& firstFrameLaserTextureID, TEXT::Text& score, Sound& shootEffectSound, int& gameHudID,
-		Sound& asteroidExplosion, Sound& shotgunShot, Sound& powerUpShotgun, Sound& powerUpSlow, Sound& powerUpInvencible);
+		Sound& asteroidExplosion, Sound& shotgunShot, Sound& powerUpShotgun, Sound& powerUpSlow, Sound& powerUpInvencible, int& bombTextureID,
+		int& backgroundTextureID, int& powerupTextureID);
 
 	static void InitializeWindow();
 
@@ -40,8 +44,11 @@ namespace ESSENTIALS
 	static void SetWindow();
 
 	static bool HasCollided(PLAYER::Spaceship spaceship, ASTEROIDS::Asteroid asteroid);
+	static bool HasCollided(PLAYER::Spaceship spaceship, BOMB::Bomb bomb);
 
 	static void SpawnMoreAsteroids(ASTEROIDS::Asteroid asteroid[]);
+
+	static void DrawBackground();
 }
 
 namespace SCREEN
@@ -59,11 +66,15 @@ namespace OBJECTS
 	PLAYER::Spaceship spaceship;
 
 	std::vector<BULLETS::Bullets> bullets;
+	std::vector<EXPLOSION::Explosion> activeExplosions;
+
+	BOMB::Bomb bomb;
 }
 
 namespace ASSETS
 {
 	Texture tempTexture;
+	Texture explosionTexture;
 	TEXT::Text score;
 }
 
@@ -75,7 +86,8 @@ void ASTEROIDS::MainLoop()
 
 	ESSENTIALS::Initialization(ASSETS::tempTexture, OBJECTS::spaceship, EXTERNS::bigAsteroidTextureID, EXTERNS::mediumAsteroidTextureID,
 		EXTERNS::smallAsteroidTextureID, EXTERNS::firstFrameLaserTextureID, ASSETS::score, EXTERNS::shootEffectSound, EXTERNS::gameHudID,
-		EXTERNS::asteroidExplosionSound, EXTERNS::shotgunShotSound, EXTERNS::powerUpShotgunSound, EXTERNS::powerUpSlowSound, EXTERNS::powerUpInvencibleSound);
+		EXTERNS::asteroidExplosionSound, EXTERNS::shotgunShotSound, EXTERNS::powerUpShotgunSound, EXTERNS::powerUpSlowSound, EXTERNS::powerUpInvencibleSound,
+		EXTERNS::bombTextureID, EXTERNS::backgroundTextureID, EXTERNS::powerUpTextureID);
 
 	ESSENTIALS::SetWindow();
 
@@ -92,9 +104,13 @@ void ASTEROIDS::MainLoop()
 
 		POWERUP::SetPowerUp(OBJECTS::spaceship.powerUp);
 
+		BOMB::ManageBombSpawn(OBJECTS::bomb);
+
 		ESSENTIALS::UpdateTimers();
 
 		PLAYER::UpdatePowerUp(OBJECTS::spaceship);
+
+		BOMB::UpdateBomb(OBJECTS::bomb);
 
 		SCREEN::Update(EXTERNS::screenWidth, EXTERNS::screenHeight);
 
@@ -122,6 +138,11 @@ void ASTEROIDS::MainLoop()
 			}
 		}
 
+		for (int i = 0; i < OBJECTS::activeExplosions.size(); ++i)
+		{
+			EXPLOSION::UpdateExplosion(OBJECTS::activeExplosions[i]);
+		}
+
 		for (int i = 0; i < GLOBALS::maxAsteroids; i++)
 		{
 			if (!OBJECTS::asteroids[i].isActive)
@@ -133,6 +154,16 @@ void ASTEROIDS::MainLoop()
 			{
 				if (OBJECTS::bullets[j].currentLifeSpan > 0.0f && ASTEROIDS::HasCollided(OBJECTS::bullets[j], OBJECTS::asteroids[i]))
 				{
+					Vector2 explosionPos = OBJECTS::asteroids[i].position;
+					if (OBJECTS::activeExplosions.size() < GLOBALS::maxExplosions)
+					{
+						EXPLOSION::Explosion newExplosion;
+
+						EXPLOSION::InitExplosion(newExplosion, explosionPos, ASSETS::explosionTexture, 32.0f, 32.0f, 16, 20.0f); 
+
+						OBJECTS::activeExplosions.push_back(newExplosion);
+					}
+
 					ASTEROIDS::SplitAsteroid(OBJECTS::asteroids[i], OBJECTS::asteroids);
 
 					OBJECTS::asteroids[i].isActive = false;
@@ -160,12 +191,24 @@ void ASTEROIDS::MainLoop()
 			}
 		}
 
+		if (OBJECTS::bomb.isActive && ESSENTIALS::HasCollided(OBJECTS::spaceship, OBJECTS::bomb) && !OBJECTS::spaceship.isInvincible)
+		{
+			OBJECTS::bomb.isActive = false;
+
+			PLAYER::UpdateLives(OBJECTS::spaceship);
+			PLAYER::ResetSpaceship(OBJECTS::spaceship);
+
+			PlaySound(EXTERNS::asteroidExplosionSound);
+		}
+
 		DeleteBullets(OBJECTS::bullets);
 
 		ESSENTIALS::StartDrawing();
 		ESSENTIALS::BackgroundClear(BLACK);
 
 		// draw
+
+		ESSENTIALS::DrawBackground();
 
 		PLAYER::DrawSpaceship(OBJECTS::spaceship);
 
@@ -187,9 +230,22 @@ void ASTEROIDS::MainLoop()
 
 		SCREEN::DrawHUD();
 
+		if (OBJECTS::bomb.isActive)
+		{
+			BOMB::DrawBomb(OBJECTS::bomb);
+		}
+
 		if (!OBJECTS::spaceship.powerUp.isCollected)
 		{
 			POWERUP::DrawPowerUp(OBJECTS::spaceship.powerUp);
+		}
+
+		for (int i = 0; i < OBJECTS::activeExplosions.size(); ++i)
+		{
+			if (OBJECTS::activeExplosions[i].isActive)
+			{
+				EXPLOSION::DrawExplosion(OBJECTS::activeExplosions[i]);
+			}
 		}
 
 		ESSENTIALS::FinishDrawing();
@@ -201,7 +257,8 @@ void ASTEROIDS::MainLoop()
 
 void ESSENTIALS::Initialization(Texture& tempTexture, PLAYER::Spaceship& spaceship, int& bigAsteroidTextureID, int& mediumAsteroidTextureID,
 	int& smallAsteroidTextureID, int& firstFrameLaserTextureID, TEXT::Text& score, Sound& shootEffectSound, int& gameHudID,
-	Sound& asteroidExplosion,  Sound& shotgunShot, Sound& powerUpShotgun, Sound& powerUpSlow, Sound& powerUpInvencible)
+	Sound& asteroidExplosion, Sound& shotgunShot, Sound& powerUpShotgun, Sound& powerUpSlow, Sound& powerUpInvencible, int& bombTextureID,
+	int& backgroundTextureID, int& powerupTextureID)
 {
 	ESSENTIALS::InitializeWindow();
 	InitAudioDevice();
@@ -227,11 +284,22 @@ void ESSENTIALS::Initialization(Texture& tempTexture, PLAYER::Spaceship& spacesh
 	tempTexture = LoadTexture(EXTERNS::smallAsteroidTexture.c_str());
 	smallAsteroidTextureID = tempTexture.id;
 
+	ASSETS::explosionTexture = LoadTexture(EXTERNS::explosionTexture.c_str());
+
 	tempTexture = LoadTexture(EXTERNS::gameHUD.c_str());
 	gameHudID = tempTexture.id;
 
 	tempTexture = LoadTexture(EXTERNS::firstFrameLaserTexture.c_str());
 	firstFrameLaserTextureID = tempTexture.id;
+
+	tempTexture = LoadTexture(EXTERNS::bombTexture.c_str());
+	bombTextureID = tempTexture.id;
+
+	tempTexture = LoadTexture(EXTERNS::powerUpTexture.c_str());
+	powerupTextureID = tempTexture.id;
+
+	tempTexture = LoadTexture(EXTERNS::backgroundTexture.c_str());
+	backgroundTextureID = tempTexture.id;
 
 	shootEffectSound = LoadSound(EXTERNS::shootEffect.c_str());
 
@@ -312,6 +380,26 @@ bool ESSENTIALS::HasCollided(PLAYER::Spaceship spaceship, ASTEROIDS::Asteroid as
 	return distanceSquared <= sumOfRadiusSquared;
 }
 
+bool ESSENTIALS::HasCollided(PLAYER::Spaceship spaceship, BOMB::Bomb bomb)
+{
+	float spaceshipPixelX = UTILS::PercentToPixelsX(spaceship.position.x);
+	float spaceshipPixelY = UTILS::PercentToPixelsY(spaceship.position.y);
+	float bombPixelX = UTILS::PercentToPixelsX(bomb.position.x);
+	float bombPixelY = UTILS::PercentToPixelsY(bomb.position.y);
+
+	float distX = spaceshipPixelX - bombPixelX;
+	float distY = spaceshipPixelY - bombPixelY;
+	float distanceSquared = (distX * distX) + (distY * distY);
+
+	float bombRadius = bomb.radius;
+	float spaceshipRadius = spaceship.radius;
+
+	float sumOfRadius = spaceshipRadius + bombRadius;
+	float sumOfRadiusSquared = sumOfRadius * sumOfRadius;
+
+	return distanceSquared <= sumOfRadiusSquared;
+}
+
 void ESSENTIALS::SpawnMoreAsteroids(ASTEROIDS::Asteroid asteroid[])
 {
 	EXTERNS::difficultyTimer -= EXTERNS::deltaT;
@@ -354,6 +442,11 @@ void ESSENTIALS::SpawnMoreAsteroids(ASTEROIDS::Asteroid asteroid[])
 		}
 		EXTERNS::timerSpawn = EXTERNS::spawnTime;
 	}
+}
+
+void ESSENTIALS::DrawBackground()
+{
+	DRAW::DrawSprite(static_cast<float>(EXTERNS::backgroundTextureID), 50.0f, 50.0f, 100.0f, 100.0f, WHITE);
 }
 
 void SCREEN::Update(int& screenWidth, int& screenHeight)

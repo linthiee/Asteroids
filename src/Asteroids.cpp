@@ -13,8 +13,10 @@ static int rotationDegree = 360;
 
 static float baseSpeed = 0.0f;
 
-static int minSpeed = 5;
-static int maxSpeed = 15;
+//static int minSpeed = 5;
+//static int maxSpeed = 15;
+static int minSpeed = 0;
+static int maxSpeed = 0;
  
 static int asteroidsToDivide = 2;
 
