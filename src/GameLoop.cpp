@@ -1,17 +1,18 @@
 #include "GameLoop.h"
+
+#include <vector>
+#include <iostream>
+#include <string>
+#include <time.h>
+
+#include "raylib.h"
+
 #include "Asteroids.h"
 #include "Spaceship.h"
 #include "Bullets.h"
 #include "Bomb.h"
 #include "Explosion.h"
-
 #include "Utils.h"
-#include "raylib.h"
-#include <string>
-#include <time.h>
-#include <vector>
-#include <iostream>
-
 #include "Draw.h"
 #include "PowerUp.h"
 

@@ -1,4 +1,5 @@
 #include "Explosion.h"
+
 #include "Utils.h"
 
 void EXPLOSION::InitExplosion(Explosion& explosion, Vector2 position, Texture texture, float frameWidth, float frameHeight, int totalFrames, float frameRate)

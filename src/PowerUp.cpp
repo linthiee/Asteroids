@@ -1,36 +1,35 @@
 #include "PowerUp.h"
+
 #include "Utils.h"
 #include "Globals.h"
 #include "Draw.h"
-
-static int min = 0;
-static int max = 2;
 
 static float timerToSpawn = 20.0f;
 static float currentSpawnTimer = 5.0f;
 
 POWERUP::PowerUpType POWERUP::CreatePowerUp()
 {
-	int result = GetRandomValue(min, max);
+	PowerUpType result = static_cast<PowerUpType>(GetRandomValue(static_cast<int>(PowerUpType::ShotGun), static_cast<int>(PowerUpType::Slow)));
 
 	switch (result)
 	{
-	case 0:
-
-		return POWERUP::PowerUpType::Invincible;
-
-		break;
-	case 1:
+	case POWERUP::PowerUpType::ShotGun:
 
 		return POWERUP::PowerUpType::ShotGun;
 
 		break;
-	case 2:
+	case POWERUP::PowerUpType::Invincible:
+
+		return POWERUP::PowerUpType::Invincible;
+
+		break;
+	case POWERUP::PowerUpType::Slow:
 
 		return POWERUP::PowerUpType::Slow;
 
 		break;
 	default:
+
 		return POWERUP::PowerUpType::Slow;
 
 		break;

@@ -1,5 +1,7 @@
 #include "Spaceship.h"
+
 #include "raymath.h"
+
 #include "Globals.h"
 #include "Draw.h"
 #include "Utils.h"

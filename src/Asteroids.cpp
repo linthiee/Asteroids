@@ -1,6 +1,9 @@
-#include <iostream>
 #include "Asteroids.h"
+
+#include <iostream>
+
 #include "raymath.h"
+
 #include "Draw.h"
 #include "Utils.h"
 

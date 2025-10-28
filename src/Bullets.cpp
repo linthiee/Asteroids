@@ -1,7 +1,9 @@
 #include "Bullets.h"
+
+#include "raymath.h"
+
 #include "Draw.h"
 #include "Globals.h" 
-#include "raymath.h"
 #include "Utils.h"
 
 static Vector2 mousePercent;

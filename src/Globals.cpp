@@ -60,7 +60,7 @@ std::string EXTERNS::explosionTexture = "res/img/explosion.png";;
  extern double EXTERNS::timer = 0;
 
  extern int EXTERNS::initialMaxAsteroidsOnScreen = 10;
- extern int EXTERNS::maxAsteroidsOnScreen = 25;
+ extern int EXTERNS::maxAsteroidsOnScreen = 30;
  extern float EXTERNS::spawnTime = 10.0f;
  extern float EXTERNS::timerSpawn = spawnTime;
  extern float EXTERNS::timerToIncreaseDifficulty = 30.0f;

@@ -1,87 +1,105 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    <Filter Include="Spaceship">
+      <UniqueIdentifier>{57c796e6-901a-4a2e-9474-9b09b4f42a23}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    <Filter Include="Asteroid">
+      <UniqueIdentifier>{fac0f0fe-2e35-4af9-a46e-c87c360d27fa}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    <Filter Include="Globals">
+      <UniqueIdentifier>{49a36fcb-e038-4192-838e-2f549137136f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{38364bd3-16c8-4197-9f7d-567cb6e88d6b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Spaceship\PowerUp">
+      <UniqueIdentifier>{66a13b9b-df0f-4d53-9e35-7796e17fa13f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Asteroid\Bomb">
+      <UniqueIdentifier>{cb57e9aa-3910-4875-b62f-9aeb17f549cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Spaceship\Bullet">
+      <UniqueIdentifier>{bfe72951-d5e3-4e7b-91c1-f660fefcb8ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Asteroid\Animation">
+      <UniqueIdentifier>{21ba8fc7-3272-4604-bd38-e130610c4c7b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game">
+      <UniqueIdentifier>{3a257604-429d-4453-842d-97fde34371bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Loop">
+      <UniqueIdentifier>{76eb5e68-01ac-4a5f-bf14-ceda9958019f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\GameLoop.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\main.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\Spaceship.cpp">
+      <Filter>Spaceship</Filter>
     </ClCompile>
     <ClCompile Include="src\Asteroids.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Asteroid</Filter>
     </ClCompile>
     <ClCompile Include="src\Globals.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Spaceship.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Bullets.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Globals</Filter>
     </ClCompile>
     <ClCompile Include="src\Utils.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\PowerUp.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Bomb.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Explosion.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Utils</Filter>
     </ClCompile>
     <ClCompile Include="src\Draw.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PowerUp.cpp">
+      <Filter>Spaceship\PowerUp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Bomb.cpp">
+      <Filter>Asteroid\Bomb</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Bullets.cpp">
+      <Filter>Spaceship\Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Explosion.cpp">
+      <Filter>Asteroid\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameLoop.cpp">
+      <Filter>Game\Loop</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\GameLoop.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="src\Spaceship.h">
+      <Filter>Spaceship</Filter>
     </ClInclude>
     <ClInclude Include="src\Asteroids.h">
-      <Filter>Header Files</Filter>
+      <Filter>Asteroid</Filter>
     </ClInclude>
     <ClInclude Include="src\Globals.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Spaceship.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Bullets.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Draw.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Text.h">
-      <Filter>Header Files</Filter>
+      <Filter>Globals</Filter>
     </ClInclude>
     <ClInclude Include="src\Utils.h">
-      <Filter>Header Files</Filter>
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Text.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Draw.h">
+      <Filter>Utils</Filter>
     </ClInclude>
     <ClInclude Include="src\PowerUp.h">
-      <Filter>Header Files</Filter>
+      <Filter>Spaceship\PowerUp</Filter>
     </ClInclude>
     <ClInclude Include="src\Bomb.h">
-      <Filter>Header Files</Filter>
+      <Filter>Asteroid\Bomb</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Bullets.h">
+      <Filter>Spaceship\Bullet</Filter>
     </ClInclude>
     <ClInclude Include="src\Explosion.h">
-      <Filter>Header Files</Filter>
+      <Filter>Asteroid\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameLoop.h">
+      <Filter>Game\Loop</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

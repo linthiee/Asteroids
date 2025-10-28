@@ -1,8 +1,10 @@
 #include "Bomb.h"
+
+#include "raymath.h"
+
 #include "Globals.h"
 #include "Draw.h"
 #include "Utils.h"
-#include "raymath.h"
 
 static float bombSpeed = 25.0f;
 static float spawnCooldown = 15.0f;
