@@ -68,6 +68,11 @@ namespace EXTERNS
 	extern float timerSpawn;
 	extern float timerToIncreaseDifficulty; 
 	extern float difficultyTimer;
+
+	extern int currentAsteroids;
+
+	extern int spawnInvincibilityTimer;
+	extern int spawnInvincibilityTimerDecay;
 }
 
 namespace GLOBALS

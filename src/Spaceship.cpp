@@ -6,6 +6,18 @@
 #include "Draw.h"
 #include "Utils.h"
 
+namespace ASSETS
+{
+	namespace SOUND
+	{
+		void SetSound(Sound sound);
+		void SetPlayingSound();
+		//void PauseUnpauseSong(buttons::Button& mute);
+		void PauseSounds(Sound sound);
+		void UnpauseSound(Sound sound);
+	}
+}
+
 static float radius = 10.0f;
 static float maxSpeed = 500.0f;
 
@@ -36,6 +48,9 @@ void PLAYER::CreateSpaceship(Spaceship& spaceship)
 	spaceship.isInvincible = false;
 	spaceship.hasSlow = false;
 
+	spaceship.onSpawnInvincibility = true;
+	spaceship.onSpawnUnvincibleTimer = 0.0f;
+
 	spaceship.width = 100.0f;
 	spaceship.height = 100.0f;
 
@@ -47,6 +62,16 @@ void PLAYER::CreateSpaceship(Spaceship& spaceship)
 	spaceship.currentFireRateCd = 0.0f;
 
 	spaceship.lookingDirection.y = static_cast<float>(atan2f(spaceship.lookingDirection.y, spaceship.lookingDirection.x));
+}
+
+bool PLAYER::HasLost(Spaceship spaceship)
+{
+	return spaceship.lives <= 0;
+}
+
+void PLAYER::SetLife(Spaceship& spaceship)
+{
+	spaceship.lives--;
 }
 
 bool PLAYER::IsAccelerating()
@@ -63,6 +88,8 @@ void PLAYER::SetLookingDirection(Spaceship& spaceship)
 void PLAYER::UpdateSpaceship(Spaceship& spaceship, TEXT::Text& score)
 {
 	score.text = "Score: " + std::to_string(spaceship.score);
+
+	PLAYER::UpdateInvencibility(spaceship);
 
 	PLAYER::SetLookingDirection(spaceship);
 
@@ -134,6 +161,22 @@ void PLAYER::CheckOutOfBonds(Spaceship& spaceship)
 	}
 }
 
+void PLAYER::UpdateInvencibility(Spaceship& spaceship)
+{
+	if (spaceship.onSpawnInvincibility)
+	{
+		spaceship.onSpawnUnvincibleTimer += EXTERNS::deltaT;
+		spaceship.color = GOLD;
+
+		if (spaceship.onSpawnUnvincibleTimer >= EXTERNS::spawnInvincibilityTimerDecay)
+		{
+			spaceship.onSpawnInvincibility = false;
+			spaceship.color = WHITE;
+
+		}
+	}
+}
+
 void PLAYER::UpdateLives(Spaceship& spaceship)
 {
 	spaceship.lives--;
@@ -154,6 +197,9 @@ void PLAYER::ResetSpaceship(Spaceship& spaceship)
 	spaceship.isShotgunActive = false;
 	spaceship.isInvincible = false;
 	spaceship.hasSlow = false;
+
+	spaceship.onSpawnInvincibility = true;
+	spaceship.onSpawnUnvincibleTimer = 0.0f;
 
 	spaceship.speed = 300.0f;
 
@@ -187,7 +233,6 @@ void PLAYER::ApplyPowerUp(Spaceship& spaceship)
 {
 	if (CollectedPowerUp(spaceship))
 	{
-
 		if (spaceship.powerUp.isActive && !spaceship.powerUp.isCollected && CollectedPowerUp(spaceship))
 		{
 			spaceship.powerUp.isCollected = true;
@@ -196,16 +241,14 @@ void PLAYER::ApplyPowerUp(Spaceship& spaceship)
 			{
 			case POWERUP::PowerUpType::ShotGun:
 
-				SetSoundVolume(EXTERNS::powerUpShotgunSound, 0.5);
-				PlaySound(EXTERNS::powerUpShotgunSound);
+				ASSETS::SOUND::SetSound(EXTERNS::powerUpShotgunSound);
 				spaceship.isShotgunActive = true;
 
 				break;
 
 			case POWERUP::PowerUpType::Invincible:
 
-				SetSoundVolume(EXTERNS::powerUpInvencibleSound, 0.5);
-				PlaySound(EXTERNS::powerUpInvencibleSound);
+				ASSETS::SOUND::SetSound(EXTERNS::powerUpInvencibleSound);
 				spaceship.isInvincible = true;
 				spaceship.color = GOLD;
 
@@ -213,8 +256,7 @@ void PLAYER::ApplyPowerUp(Spaceship& spaceship)
 
 			case POWERUP::PowerUpType::Slow:
 
-				SetSoundVolume(EXTERNS::powerUpSlowSound, 0.5);
-				PlaySound(EXTERNS::powerUpSlowSound);
+				ASSETS::SOUND::SetSound(EXTERNS::powerUpSlowSound);
 				spaceship.hasSlow = true;
 
 				break;

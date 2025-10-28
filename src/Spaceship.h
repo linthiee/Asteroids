@@ -24,6 +24,10 @@ namespace PLAYER
 		bool isInvincible;
 		bool hasSlow;
 
+		bool onSpawnInvincibility;
+
+		float onSpawnUnvincibleTimer;
+
 		float speed;
 
 		float width;
@@ -40,6 +44,9 @@ namespace PLAYER
 
 	void CreateSpaceship(Spaceship& spaceship);
 
+	bool HasLost(Spaceship spaceship);
+	void SetLife(Spaceship& spaceship);
+
 	bool IsAccelerating();
 	void SetLookingDirection(Spaceship& spaceship);
 	void UpdateSpaceship(Spaceship& spaceship, TEXT::Text& score);
@@ -48,12 +55,13 @@ namespace PLAYER
 	void UpdateLookingDirection(Spaceship& spaceship);
 	void CheckOutOfBonds(Spaceship& spaceship);
 
+	void UpdateInvencibility(Spaceship& spaceship);
+
 	void UpdateLives(Spaceship& spaceship);
 	void ResetSpaceship(Spaceship& spaceship);
 
 	bool CollectedPowerUp(Spaceship spaceship);
 	void ApplyPowerUp(Spaceship& spaceship);
-
 
 	void UpdatePowerUp(Spaceship& spaceship);
 

@@ -25,7 +25,7 @@ namespace ESSENTIALS
 	static void Initialization(Texture& tempTexture, PLAYER::Spaceship& spaceship, int& bigAsteroidTextureID, int& mediumAsteroidTextureID,
 		int& smallAsteroidTextureID, int& firstFrameLaserTextureID, TEXT::Text& score, Sound& shootEffectSound, int& gameHudID,
 		Sound& asteroidExplosion, Sound& shotgunShot, Sound& powerUpShotgun, Sound& powerUpSlow, Sound& powerUpInvencible, int& bombTextureID,
-		int& backgroundTextureID, int& powerupTextureID);
+		int& backgroundTextureID, int& powerupTextureID, ASTEROIDS::Asteroid asteroids[GLOBALS::maxAsteroids]);
 
 	static void InitializeWindow();
 
@@ -63,6 +63,13 @@ namespace SCREEN
 
 namespace OBJECTS
 {
+	struct Cursor
+	{
+		float radius = 0.5f;
+		float positionX = 0.0f;
+		float positionY = 0.0f;
+	};
+
 	ASTEROIDS::Asteroid asteroids[GLOBALS::maxAsteroids] = { 0 };
 	PLAYER::Spaceship spaceship;
 
@@ -72,184 +79,101 @@ namespace OBJECTS
 	BOMB::Bomb bomb;
 }
 
+namespace STATE
+{
+	enum class State
+	{
+		Menu, Play, Credits, Pause, HowToPlay, EndScreen, Exit
+	};
+}
+
+namespace GAME
+{
+	STATE::State state = STATE::State::Menu;
+
+	void Update();
+	void Draw();
+}
+
 namespace ASSETS
 {
 	Texture tempTexture;
 	Texture explosionTexture;
 	TEXT::Text score;
+
+
+	namespace SOUND
+	{
+		void SetSound(Sound sound);
+		void SetPlayingSound();
+		//void PauseUnpauseSong(buttons::Button& mute);
+		void PauseSounds(Sound sound);
+		void UnpauseSound(Sound sound);
+	}
 }
 
 void ASTEROIDS::MainLoop()
 {
 	// initialization 
-
-	ESSENTIALS::SetSeed();
+	SetExitKey(KEY_VOLUME_UP);
 
 	ESSENTIALS::Initialization(ASSETS::tempTexture, OBJECTS::spaceship, EXTERNS::bigAsteroidTextureID, EXTERNS::mediumAsteroidTextureID,
 		EXTERNS::smallAsteroidTextureID, EXTERNS::firstFrameLaserTextureID, ASSETS::score, EXTERNS::shootEffectSound, EXTERNS::gameHudID,
 		EXTERNS::asteroidExplosionSound, EXTERNS::shotgunShotSound, EXTERNS::powerUpShotgunSound, EXTERNS::powerUpSlowSound, EXTERNS::powerUpInvencibleSound,
-		EXTERNS::bombTextureID, EXTERNS::backgroundTextureID, EXTERNS::powerUpTextureID);
+		EXTERNS::bombTextureID, EXTERNS::backgroundTextureID, EXTERNS::powerUpTextureID, OBJECTS::asteroids);
 
-	ESSENTIALS::SetWindow();
-
-	for (int i = 0; i < EXTERNS::initialMaxAsteroidsOnScreen; i++)
-	{
-		ASTEROIDS::CreateAsteroid(OBJECTS::asteroids[i]);
-	}
-
-	PLAYER::CreateSpaceship(OBJECTS::spaceship);
+	STATE::State state = STATE::State::Play;
 
 	while (!ESSENTIALS::IsWindowClosed())
 	{
 		// update
-
-		POWERUP::SetPowerUp(OBJECTS::spaceship.powerUp);
-
-		BOMB::ManageBombSpawn(OBJECTS::bomb);
-
-		ESSENTIALS::UpdateTimers();
-
-		PLAYER::UpdatePowerUp(OBJECTS::spaceship);
-
-		BOMB::UpdateBomb(OBJECTS::bomb);
-
-		SCREEN::Update(EXTERNS::screenWidth, EXTERNS::screenHeight);
-
-		PLAYER::UpdateSpaceship(OBJECTS::spaceship, ASSETS::score);
-
-		PLAYER::ApplyPowerUp(OBJECTS::spaceship);
-
-		ESSENTIALS::SpawnMoreAsteroids(OBJECTS::asteroids);
-
-		BULLETS::AssignBulletsOnCreation(OBJECTS::bullets, OBJECTS::spaceship);
-
-		if (OBJECTS::bullets.size() > 0)
+		switch (state)
 		{
-			for (int i = 0; i < OBJECTS::bullets.size(); i++)
-			{
-				BULLETS::UpdateBullet(OBJECTS::bullets[i]);
-			}
+		case STATE::State::Menu:
+			break;
+		case STATE::State::Play:
+
+			GAME::Update();
+
+			break;
+		case STATE::State::Credits:
+			break;
+		case STATE::State::Pause:
+			break;
+		case STATE::State::HowToPlay:
+			break;
+		case STATE::State::EndScreen:
+			break;
+		case STATE::State::Exit:
+			break;
+		default:
+			break;
 		}
-
-		for (int i = 0; i < GLOBALS::maxAsteroids; i++)
-		{
-			if (OBJECTS::asteroids[i].isActive)
-			{
-				ASTEROIDS::UpdateAsteroid(OBJECTS::asteroids[i], OBJECTS::spaceship);
-			}
-		}
-
-		for (int i = 0; i < OBJECTS::activeExplosions.size(); ++i)
-		{
-			EXPLOSION::UpdateExplosion(OBJECTS::activeExplosions[i]);
-		}
-
-		for (int i = 0; i < GLOBALS::maxAsteroids; i++)
-		{
-			if (!OBJECTS::asteroids[i].isActive)
-			{
-				continue;
-			}
-
-			for (int j = 0; j < OBJECTS::bullets.size(); j++)
-			{
-				if (OBJECTS::bullets[j].currentLifeSpan > 0.0f && ASTEROIDS::HasCollided(OBJECTS::bullets[j], OBJECTS::asteroids[i]))
-				{
-					Vector2 explosionPos = OBJECTS::asteroids[i].position;
-					if (OBJECTS::activeExplosions.size() < GLOBALS::maxExplosions)
-					{
-						EXPLOSION::Explosion newExplosion;
-
-						EXPLOSION::InitExplosion(newExplosion, explosionPos, ASSETS::explosionTexture, 32.0f, 32.0f, 16, 20.0f); 
-
-						OBJECTS::activeExplosions.push_back(newExplosion);
-					}
-
-					ASTEROIDS::SplitAsteroid(OBJECTS::asteroids[i], OBJECTS::asteroids);
-
-					OBJECTS::asteroids[i].isActive = false;
-
-					OBJECTS::spaceship.score += OBJECTS::asteroids[i].score;
-
-					OBJECTS::bullets[j].currentLifeSpan = 0.0f;
-
-					PlaySound(EXTERNS::asteroidExplosionSound);
-
-					break;
-				}
-			}
-		}
-
-		for (int i = 0; i < GLOBALS::maxAsteroids; i++)
-		{
-			if (ESSENTIALS::HasCollided(OBJECTS::spaceship, OBJECTS::asteroids[i]) && OBJECTS::asteroids[i].isActive && !OBJECTS::spaceship.isInvincible)
-			{
-				PLAYER::UpdateLives(OBJECTS::spaceship);
-				PLAYER::ResetSpaceship(OBJECTS::spaceship);
-				OBJECTS::asteroids[i].isActive = false;
-
-				PlaySound(EXTERNS::asteroidExplosionSound);
-			}
-		}
-
-		if (OBJECTS::bomb.isActive && ESSENTIALS::HasCollided(OBJECTS::spaceship, OBJECTS::bomb) && !OBJECTS::spaceship.isInvincible)
-		{
-			OBJECTS::bomb.isActive = false;
-
-			PLAYER::UpdateLives(OBJECTS::spaceship);
-			PLAYER::ResetSpaceship(OBJECTS::spaceship);
-
-			PlaySound(EXTERNS::asteroidExplosionSound);
-		}
-
-		DeleteBullets(OBJECTS::bullets);
-
-		ESSENTIALS::StartDrawing();
-		ESSENTIALS::BackgroundClear(BLACK);
 
 		// draw
 
-		ESSENTIALS::DrawBackground();
-
-		PLAYER::DrawSpaceship(OBJECTS::spaceship);
-
-		if (OBJECTS::bullets.size() > 0)
+		switch (state)
 		{
-			for (int i = 0; i < OBJECTS::bullets.size(); i++)
-			{
-				BULLETS::DrawBullet(OBJECTS::bullets[i]);
-			}
+		case STATE::State::Menu:
+			break;
+		case STATE::State::Play:
+
+			GAME::Draw();
+
+			break;
+		case STATE::State::Credits:
+			break;
+		case STATE::State::Pause:
+			break;
+		case STATE::State::HowToPlay:
+			break;
+		case STATE::State::EndScreen:
+			break;
+		case STATE::State::Exit:
+			break;
+		default:
+			break;
 		}
-
-		for (int i = 0; i < GLOBALS::maxAsteroids; i++)
-		{
-			if (OBJECTS::asteroids[i].isActive)
-			{
-				ASTEROIDS::DrawAsteroid(OBJECTS::asteroids[i]);
-			}
-		}
-
-		SCREEN::DrawHUD();
-
-		if (OBJECTS::bomb.isActive)
-		{
-			BOMB::DrawBomb(OBJECTS::bomb);
-		}
-
-		if (!OBJECTS::spaceship.powerUp.isCollected)
-		{
-			POWERUP::DrawPowerUp(OBJECTS::spaceship.powerUp);
-		}
-
-		for (int i = 0; i < OBJECTS::activeExplosions.size(); ++i)
-		{
-			if (OBJECTS::activeExplosions[i].isActive)
-			{
-				EXPLOSION::DrawExplosion(OBJECTS::activeExplosions[i]);
-			}
-		}
-
-		ESSENTIALS::FinishDrawing();
 	}
 	ESSENTIALS::WindowClose();
 }
@@ -259,8 +183,10 @@ void ASTEROIDS::MainLoop()
 void ESSENTIALS::Initialization(Texture& tempTexture, PLAYER::Spaceship& spaceship, int& bigAsteroidTextureID, int& mediumAsteroidTextureID,
 	int& smallAsteroidTextureID, int& firstFrameLaserTextureID, TEXT::Text& score, Sound& shootEffectSound, int& gameHudID,
 	Sound& asteroidExplosion, Sound& shotgunShot, Sound& powerUpShotgun, Sound& powerUpSlow, Sound& powerUpInvencible, int& bombTextureID,
-	int& backgroundTextureID, int& powerupTextureID)
+	int& backgroundTextureID, int& powerupTextureID, ASTEROIDS::Asteroid asteroids[GLOBALS::maxAsteroids])
 {
+	ESSENTIALS::SetSeed();
+
 	ESSENTIALS::InitializeWindow();
 	InitAudioDevice();
 
@@ -313,6 +239,15 @@ void ESSENTIALS::Initialization(Texture& tempTexture, PLAYER::Spaceship& spacesh
 	powerUpSlow = LoadSound(EXTERNS::powerUpSlow.c_str());
 
 	powerUpInvencible = LoadSound(EXTERNS::powerUpInvencible.c_str());
+
+	for (int i = 0; i < EXTERNS::initialMaxAsteroidsOnScreen; i++)
+	{
+		ASTEROIDS::CreateAsteroid(asteroids[i]);
+		EXTERNS::currentAsteroids++;
+	}
+	PLAYER::CreateSpaceship(spaceship);
+
+	SetWindow();
 }
 
 void ESSENTIALS::InitializeWindow()
@@ -323,6 +258,7 @@ void ESSENTIALS::InitializeWindow()
 void ESSENTIALS::UpdateTimers()
 {
 	EXTERNS::deltaT = GetFrameTime();
+
 	//time per frame
 }
 
@@ -415,20 +351,19 @@ void ESSENTIALS::SpawnMoreAsteroids(ASTEROIDS::Asteroid asteroid[])
 	}
 
 	EXTERNS::timerSpawn -= EXTERNS::deltaT;
+	EXTERNS::currentAsteroids = 0;
 
 	if (EXTERNS::timerSpawn <= 0.0f)
 	{
-		int currentAsteroids = 0;
-
 		for (int i = 0; i < GLOBALS::maxAsteroids; i++)
 		{
 			if (asteroid[i].isActive)
 			{
-				currentAsteroids++;
+				EXTERNS::currentAsteroids++;
 			}
 		}
 
-		if (currentAsteroids < EXTERNS::maxAsteroidsOnScreen)
+		if (EXTERNS::currentAsteroids < EXTERNS::maxAsteroidsOnScreen)
 		{
 			for (int i = 0; i < GLOBALS::maxAsteroids; i++)
 			{
@@ -461,5 +396,207 @@ void SCREEN::DrawHUD()
 	DRAW::DrawSprite(static_cast<float>(EXTERNS::gameHudID), 50.0f, 50.0f, 100.0f, 100.0f, WHITE);
 	PLAYER::DrawLives(OBJECTS::spaceship);
 	DRAW::DrawText(ASSETS::score);
+}
+
+void GAME::Update()
+{
+
+	POWERUP::SetPowerUp(OBJECTS::spaceship.powerUp);
+
+	BOMB::ManageBombSpawn(OBJECTS::bomb);
+
+	ESSENTIALS::UpdateTimers();
+
+	PLAYER::UpdatePowerUp(OBJECTS::spaceship);
+
+	BOMB::UpdateBomb(OBJECTS::bomb);
+
+	SCREEN::Update(EXTERNS::screenWidth, EXTERNS::screenHeight);
+
+	PLAYER::ApplyPowerUp(OBJECTS::spaceship);
+
+	ESSENTIALS::SpawnMoreAsteroids(OBJECTS::asteroids);
+
+	BULLETS::AssignBulletsOnCreation(OBJECTS::bullets, OBJECTS::spaceship);
+
+	if (OBJECTS::bullets.size() > 0)
+	{
+		for (int i = 0; i < OBJECTS::bullets.size(); i++)
+		{
+			BULLETS::UpdateBullet(OBJECTS::bullets[i]);
+		}
+	}
+
+	for (int i = 0; i < GLOBALS::maxAsteroids; i++)
+	{
+		if (OBJECTS::asteroids[i].isActive)
+		{
+			ASTEROIDS::UpdateAsteroid(OBJECTS::asteroids[i], OBJECTS::spaceship);
+		}
+	}
+
+	if (PLAYER::HasLost(OBJECTS::spaceship))
+	{
+		PLAYER::SetLife(OBJECTS::spaceship);
+		return;
+	}
+
+	for (int i = 0; i < OBJECTS::activeExplosions.size(); ++i)
+	{
+		EXPLOSION::UpdateExplosion(OBJECTS::activeExplosions[i]);
+	}
+
+	PLAYER::UpdateSpaceship(OBJECTS::spaceship, ASSETS::score);
+
+	for (int i = 0; i < GLOBALS::maxAsteroids; i++)
+	{
+		if (!OBJECTS::asteroids[i].isActive)
+		{
+			continue;
+		}
+
+		for (int j = 0; j < OBJECTS::bullets.size(); j++)
+		{
+			if (OBJECTS::bullets[j].currentLifeSpan > 0.0f && ASTEROIDS::HasCollided(OBJECTS::bullets[j], OBJECTS::asteroids[i]) &&
+				OBJECTS::asteroids[i].type == ASTEROIDS::AsteroidType::Small)
+			{
+				OBJECTS::asteroids[i].isActive = false;
+			}
+
+			if (OBJECTS::bullets[j].currentLifeSpan > 0.0f && ASTEROIDS::HasCollided(OBJECTS::bullets[j], OBJECTS::asteroids[i]))
+			{
+				Vector2 explosionPos = OBJECTS::asteroids[i].position;
+				if (OBJECTS::activeExplosions.size() < GLOBALS::maxExplosions)
+				{
+					EXPLOSION::Explosion newExplosion;
+
+					EXPLOSION::InitExplosion(newExplosion, explosionPos, ASSETS::explosionTexture, 32.0f, 32.0f, 16, 20.0f);
+
+					OBJECTS::activeExplosions.push_back(newExplosion);
+				}
+
+				ASTEROIDS::SplitAsteroid(OBJECTS::asteroids[i], OBJECTS::asteroids);
+
+				OBJECTS::asteroids[i].isActive = false;
+
+				EXTERNS::currentAsteroids--;
+
+				OBJECTS::spaceship.score += OBJECTS::asteroids[i].score;
+
+				OBJECTS::bullets[j].currentLifeSpan = 0.0f;
+
+				ASSETS::SOUND::SetSound(EXTERNS::asteroidExplosionSound);
+
+				break;
+			}
+		}
+	}
+
+	for (int i = 0; i < GLOBALS::maxAsteroids; i++)
+	{
+		if (ESSENTIALS::HasCollided(OBJECTS::spaceship, OBJECTS::asteroids[i]) && OBJECTS::asteroids[i].isActive &&
+			!OBJECTS::spaceship.isInvincible && !OBJECTS::spaceship.onSpawnInvincibility)
+		{
+			PLAYER::UpdateLives(OBJECTS::spaceship);
+			PLAYER::ResetSpaceship(OBJECTS::spaceship);
+			OBJECTS::asteroids[i].isActive = false;
+
+			ASSETS::SOUND::SetSound(EXTERNS::asteroidExplosionSound);
+		}
+	}
+
+	if (OBJECTS::bomb.isActive && ESSENTIALS::HasCollided(OBJECTS::spaceship, OBJECTS::bomb) && !OBJECTS::spaceship.isInvincible
+		&& !OBJECTS::spaceship.onSpawnInvincibility)
+	{
+		OBJECTS::bomb.isActive = false;
+
+		PLAYER::UpdateLives(OBJECTS::spaceship);
+		PLAYER::ResetSpaceship(OBJECTS::spaceship);
+
+		ASSETS::SOUND::SetSound(EXTERNS::asteroidExplosionSound);
+	}
+
+	DeleteBullets(OBJECTS::bullets);
+}
+
+void GAME::Draw()
+{
+	ESSENTIALS::StartDrawing();
+	ESSENTIALS::BackgroundClear(BLACK);
+
+	ESSENTIALS::DrawBackground();
+
+	PLAYER::DrawSpaceship(OBJECTS::spaceship);
+
+	if (OBJECTS::bullets.size() > 0)
+	{
+		for (int i = 0; i < OBJECTS::bullets.size(); i++)
+		{
+			BULLETS::DrawBullet(OBJECTS::bullets[i]);
+		}
+	}
+
+	for (int i = 0; i < GLOBALS::maxAsteroids; i++)
+	{
+		if (OBJECTS::asteroids[i].isActive)
+		{
+			ASTEROIDS::DrawAsteroid(OBJECTS::asteroids[i]);
+		}
+	}
+
+	SCREEN::DrawHUD();
+
+	if (OBJECTS::bomb.isActive)
+	{
+		BOMB::DrawBomb(OBJECTS::bomb);
+	}
+
+	if (!OBJECTS::spaceship.powerUp.isCollected)
+	{
+		POWERUP::DrawPowerUp(OBJECTS::spaceship.powerUp);
+	}
+
+	for (int i = 0; i < OBJECTS::activeExplosions.size(); ++i)
+	{
+		if (OBJECTS::activeExplosions[i].isActive)
+		{
+			EXPLOSION::DrawExplosion(OBJECTS::activeExplosions[i]);
+		}
+	}
+
+	ESSENTIALS::FinishDrawing();
+}
+
+void ASSETS::SOUND::SetSound(Sound sound)
+{
+	SetSoundVolume(sound, 0.5f);
+	PlaySound(sound);
+}
+//void ASSETS::SOUND::SetPlayingSound()
+//{
+//	//StopSound(globals::menuSound);
+//
+//	//PlaySound(globals::playingSound);
+//}
+
+//void PauseUnpauseSong(buttons::Button& mute);
+
+//void ASSETS::SOUND::PauseSounds(Sound sound)
+//{
+//	//if (IsKeyPressed('M') && !mute.isMuted)
+//	//{
+//	//	mute.isMuted = true;
+//	//	PauseSound(globals::playingSound);
+//	//}
+//	//else if (IsKeyPressed('M') && mute.isMuted)
+//	//{
+//	//	mute.isMuted = false;
+//	//	ResumeSound(globals::playingSound);
+//	//}
+//}
+
+void ASSETS::SOUND::UnpauseSound(Sound sound)
+{
+	ResumeSound(sound);
 }
 #pragma endregion
