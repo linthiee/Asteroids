@@ -78,5 +78,5 @@ namespace GLOBALS
 
 	const int maxLives = 3;
 
-	const int maxExplosions = 20;
+	const int maxExplosions = 100;
 }

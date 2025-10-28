@@ -3,31 +3,37 @@
 #include "Globals.h"
 #include "Draw.h"
 
-static float min = 0.0f;
-static float max = 100.0f;
-
-static float shotGunPU = 60.0f;
-static float slowPU = 50.0f;
-static float invinciblePU = 70.0f;
+static int min = 0;
+static int max = 2;
 
 static float timerToSpawn = 20.0f;
 static float currentSpawnTimer = 5.0f;
 
 POWERUP::PowerUpType POWERUP::CreatePowerUp()
 {
-	float result = static_cast<float>(GetRandomValue(static_cast<int>(min), static_cast<int>(max)));
+	int result = GetRandomValue(min, max);
 
-	if (result >= invinciblePU)
+	switch (result)
 	{
+	case 0:
+
 		return POWERUP::PowerUpType::Invincible;
-	}
-	else if (result >= shotGunPU)
-	{
+
+		break;
+	case 1:
+
 		return POWERUP::PowerUpType::ShotGun;
-	}
-	else
-	{
+
+		break;
+	case 2:
+
 		return POWERUP::PowerUpType::Slow;
+
+		break;
+	default:
+		return POWERUP::PowerUpType::Slow;
+
+		break;
 	}
 }
 
