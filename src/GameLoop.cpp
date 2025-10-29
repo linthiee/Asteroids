@@ -209,6 +209,7 @@ void ASTEROIDS::MainLoop()
 
 			if (EXTERNS::retry)
 			{
+				GAME::Initialize(OBJECTS::spaceship, OBJECTS::asteroids);
 				GAME::state = GAME::STATE::State::Play;
 				EXTERNS::retry = false;
 			}
@@ -610,6 +611,8 @@ void OBJECTS::UpdateMousePosition(OBJECTS::Cursor& cursorParam)
 
 void GAME::Initialize(PLAYER::Spaceship& spaceship, ASTEROIDS::Asteroid asteroids[GLOBALS::maxAsteroids])
 {
+	EXTERNS::currentAsteroids = 0;
+
 	for (int i = 0; i < EXTERNS::initialMaxAsteroidsOnScreen; i++)
 	{
 		ASTEROIDS::CreateAsteroid(asteroids[i]);
