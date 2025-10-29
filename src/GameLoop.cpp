@@ -209,12 +209,28 @@ void ASTEROIDS::MainLoop()
 
 			if (EXTERNS::retry)
 			{
+				for (int i = 0; i < GLOBALS::maxAsteroids; i++)
+				{
+					OBJECTS::asteroids[i] = ASTEROIDS::Asteroid();
+				}
+
+				OBJECTS::activeExplosions.clear();
+				OBJECTS::bullets.clear();
+
 				GAME::Initialize(OBJECTS::spaceship, OBJECTS::asteroids);
 				GAME::state = GAME::STATE::State::Play;
 				EXTERNS::retry = false;
 			}
 			if (GAME::state == GAME::STATE::State::Play)
 			{
+				for (int i = 0; i < GLOBALS::maxAsteroids; i++)
+				{
+					OBJECTS::asteroids[i] = ASTEROIDS::Asteroid();
+				}
+
+				OBJECTS::activeExplosions.clear();
+				OBJECTS::bullets.clear();
+
 				GAME::Initialize(OBJECTS::spaceship, OBJECTS::asteroids);
 				ASSETS::SOUND::PauseSong(EXTERNS::playSound);
 				ASSETS::SOUND::SetPlayingSound();
