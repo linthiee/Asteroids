@@ -122,6 +122,10 @@
       <AdditionalLibraryDirectories>$(SolutionDir)lib\raylib-5.5_win64_msvc16\lib;%(AdditionalIncludeDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);winmm.lib;raylib.lib</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>copy "$(SolutionDir)lib\sigil-vc2015-win64\*.dll" "$(OutDir)" /y
+xcopy "$(SolutionDir)res\" "$(OutDir)/res" /i /y </Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -141,6 +145,10 @@
       <AdditionalLibraryDirectories>$(SolutionDir)lib\raylib-5.5_win64_msvc16\lib;%(AdditionalIncludeDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);winmm.lib;raylib.lib</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>copy "$(SolutionDir)lib\sigil-vc2015-win64\*.dll" "$(OutDir)" /y
+xcopy "$(SolutionDir)res\" "$(OutDir)/res" /i /y </Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -157,6 +165,9 @@
       <AdditionalLibraryDirectories>$(SolutionDir)lib\raylib-5.5_win64_msvc16\lib;%(AdditionalIncludeDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>raylib.lib;winmm.lib;$(CoreLibraryDependencies);%(AdditionalDependencies);</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy "$(SolutionDir)res\" "$(OutDir)res\" /E /I /Y</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -176,6 +187,9 @@
       <AdditionalLibraryDirectories>$(SolutionDir)lib\raylib-5.5_win64_msvc16\lib;%(AdditionalIncludeDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>raylib.lib;winmm.lib;$(CoreLibraryDependencies);%(AdditionalDependencies);</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy "$(SolutionDir)res\" "$(OutDir)res\" /E /I /Y</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
