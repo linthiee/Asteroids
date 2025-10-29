@@ -138,6 +138,7 @@ namespace GAME
 		void Update(OBJECTS::Cursor& cursor, STATE::State& currentState, BUTTONS::Button& returnButt, BUTTONS::Button& retry, BUTTONS::Button& exit);
 		void Draw(BUTTONS::Button& returnButt, BUTTONS::Button& retry, BUTTONS::Button& exit);
 	}
+	void Deinitialize(Texture& tempTexture);
 }
 
 namespace ASSETS
@@ -150,9 +151,7 @@ namespace ASSETS
 	{
 		void SetSound(Sound sound);
 		void SetPlayingSound();
-		//void PauseUnpauseSong(buttons::Button& mute);
 		void PauseSong(Sound sound);
-		//void PauseSounds(Sound sound);
 		void UnpauseSound(Sound sound);
 	}
 }
@@ -182,7 +181,7 @@ void ASTEROIDS::MainLoop()
 		EXTERNS::asteroidExplosionSound, EXTERNS::shotgunShotSound, EXTERNS::powerUpShotgunSound, EXTERNS::powerUpSlowSound, EXTERNS::powerUpInvencibleSound,
 		EXTERNS::bombTextureID, EXTERNS::backgroundTextureID, EXTERNS::powerUpTextureID, EXTERNS::bombExplosionSound, OBJECTS::asteroids,
 		EXTERNS::menuSound, EXTERNS::playSound, EXTERNS::menuTextureID, EXTERNS::buttonTextureID, EXTERNS::titleTextureID,
-		BUTTONS::play, BUTTONS::settings, BUTTONS::credits, BUTTONS::howToPlay, BUTTONS::exit, BUTTONS::pause, BUTTONS::returnButt, BUTTONS::retry, 
+		BUTTONS::play, BUTTONS::settings, BUTTONS::credits, BUTTONS::howToPlay, BUTTONS::exit, BUTTONS::pause, BUTTONS::returnButt, BUTTONS::retry,
 		BUTTONS::fullscreenToggle, BUTTONS::returnFromCredits);
 
 	SetExitKey(KEY_VOLUME_UP);
@@ -322,6 +321,7 @@ void ASTEROIDS::MainLoop()
 		}
 		ESSENTIALS::FinishDrawing();
 	}
+	GAME::Deinitialize(ASSETS::tempTexture);
 	ESSENTIALS::WindowClose();
 }
 
@@ -806,26 +806,10 @@ void ASSETS::SOUND::SetPlayingSound()
 	PlaySound(EXTERNS::playSound);
 }
 
-//void PauseUnpauseSong(buttons::Button& mute);
-
 void ASSETS::SOUND::PauseSong(Sound sound)
 {
 	PauseSound(sound);
 }
-
-//void ASSETS::SOUND::PauseSounds(Sound sound)
-//{
-	//if (IsKeyPressed('M') && !mute.isMuted)
-	//{
-	//	mute.isMuted = true;
-	//	PauseSound(globals::playingSound);
-	//}
-	//else if (IsKeyPressed('M') && mute.isMuted)
-	//{
-	//	mute.isMuted = false;
-	//	ResumeSound(globals::playingSound);
-	//}
-//}
 
 void ASSETS::SOUND::UnpauseSound(Sound sound)
 {
@@ -874,7 +858,7 @@ void GAME::MENU::Update(BUTTONS::Button& play, BUTTONS::Button& settings, BUTTON
 		settings.text.color = WHITE;
 		if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
 		{
-			currentState = STATE::State::Settings; 
+			currentState = STATE::State::Settings;
 		}
 	}
 	else
@@ -930,9 +914,9 @@ void GAME::PAUSE::Update(OBJECTS::Cursor& cursor, GAME::STATE::State& currentSta
 {
 	if (IsKeyPressed(KEY_ESCAPE))
 	{
-		currentState = GAME::STATE::State::Play; 
+		currentState = GAME::STATE::State::Play;
 		EXTERNS::gamePaused = false;
-		return; 
+		return;
 	}
 
 	OBJECTS::UpdateMousePosition(cursor);
@@ -1021,7 +1005,7 @@ void GAME::SETTINGS::Update(OBJECTS::Cursor& cursor, STATE::State& currentState,
 
 		if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
 		{
-			currentState = STATE::State::Menu; 
+			currentState = STATE::State::Menu;
 		}
 	}
 	else
@@ -1069,28 +1053,28 @@ void GAME::CREDITS::Draw(BUTTONS::Button& returnButton)
 	credits1.font = EXTERNS::defaultText.font;
 	credits1.fonstSize = 30;
 	credits1.posX = 20.0f;
-	credits1.posY= 20.0f;
+	credits1.posY = 20.0f;
 	credits1.text = "Programming made by:\n Eluney Jazmin Mousseigne";
 
 	TEXT::Text credits2;
 	credits2.font = EXTERNS::defaultText.font;
 	credits2.fonstSize = 30;
 	credits2.posX = 30.0f;
-	credits2.posY= 30.0f;
+	credits2.posY = 30.0f;
 	credits2.text = "Art made by:\n Laura Srur & Eluney Jazmin Mousseigne ";
 
 	TEXT::Text credits3;
 	credits3.font = EXTERNS::defaultText.font;
 	credits3.fonstSize = 30;
 	credits3.posX = 30.0f;
-	credits3.posY= 40.0f;
+	credits3.posY = 40.0f;
 	credits3.text = "Sounds from:\n Menu & Gameplay: \nRetro 8-bit RPG Music Pack by May Genko";
 
 	TEXT::Text credits4;
 	credits4.font = EXTERNS::defaultText.font;
 	credits4.fonstSize = 20;
 	credits4.posX = 32.0f;
-	credits4.posY= 52.0f;
+	credits4.posY = 52.0f;
 	credits4.text = "(https://maygenko.itch.io/retro-8-bit-rpg-music-pack-by-may-genko)";
 
 	TEXT::Text credits5;
@@ -1238,6 +1222,25 @@ void GAME::ENDSCREEN::Draw(BUTTONS::Button& returnButt, BUTTONS::Button& retry, 
 	BUTTONS::Draw(returnButt);
 	BUTTONS::Draw(retry);
 	BUTTONS::Draw(exit);
+}
+
+void GAME::Deinitialize(Texture& tempTexture)
+{
+	UnloadSound(EXTERNS::menuSound);
+	UnloadSound(EXTERNS::playSound);
+	UnloadSound(EXTERNS::asteroidExplosionSound);
+	UnloadSound(EXTERNS::shotgunShotSound);
+	UnloadSound(EXTERNS::shootEffectSound);
+	UnloadSound(EXTERNS::powerUpShotgunSound);
+	UnloadSound(EXTERNS::powerUpSlowSound);
+	UnloadSound(EXTERNS::powerUpInvencibleSound);
+	UnloadSound(EXTERNS::bombExplosionSound);
+
+	UnloadTexture(tempTexture);
+
+	UnloadFont(EXTERNS::defaultText.font);
+
+	CloseAudioDevice();
 }
 
 #pragma endregion

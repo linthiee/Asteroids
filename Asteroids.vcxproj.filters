@@ -13,81 +13,123 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Spaceship">
+      <UniqueIdentifier>{5819ca88-5228-483b-9b36-aad27d6ce573}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Spaceship\Bullet">
+      <UniqueIdentifier>{4792407c-67a4-450d-9442-a2bf4037a867}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Spaceship\PowerUp">
+      <UniqueIdentifier>{f69566a4-e42d-4cfa-8aec-47eedfe16c6e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Asteroid">
+      <UniqueIdentifier>{15929272-bea3-4e77-bdeb-2da68df0b05c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Asteroid\Bomb">
+      <UniqueIdentifier>{a0bbb1d9-0ab1-49c6-86a9-ba5bb80568e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Asteroid\Animation">
+      <UniqueIdentifier>{a4134596-e9b1-4c67-92da-e43749299109}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Globals">
+      <UniqueIdentifier>{071e4342-8c11-47ca-83af-e40128330a11}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game">
+      <UniqueIdentifier>{8c1b45d5-a5fd-4d5f-ab42-160f37793d03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Loop">
+      <UniqueIdentifier>{01b0f9b9-ca5b-474d-9169-dcd846816abe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Main">
+      <UniqueIdentifier>{219f47dc-4702-48b0-a211-66c6949fad75}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{41eebd6c-cf73-4ea8-8575-c3fdaa2b78a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils\Button">
+      <UniqueIdentifier>{9b826c71-7716-480f-b8b1-0978cca9fbab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils\Draw">
+      <UniqueIdentifier>{17ccfa1b-b93a-4648-b5a7-48cb7408ce65}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils\Text">
+      <UniqueIdentifier>{ee4b4b72-e1c2-4378-8181-c9eb5dbeebe4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\GameLoop.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Asteroids.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Globals.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Spaceship.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Spaceship</Filter>
     </ClCompile>
     <ClCompile Include="src\Bullets.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Utils.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Spaceship\Bullet</Filter>
     </ClCompile>
     <ClCompile Include="src\PowerUp.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Spaceship\PowerUp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Asteroids.cpp">
+      <Filter>Asteroid</Filter>
     </ClCompile>
     <ClCompile Include="src\Bomb.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Explosion.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Draw.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Asteroid\Bomb</Filter>
     </ClCompile>
     <ClCompile Include="src\Button.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Utils\Button</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Draw.cpp">
+      <Filter>Utils\Draw</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Explosion.cpp">
+      <Filter>Asteroid\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Globals.cpp">
+      <Filter>Globals</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Utils.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameLoop.cpp">
+      <Filter>Game\Loop</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
+      <Filter>Game\Main</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\GameLoop.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Asteroids.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Globals.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\Spaceship.h">
-      <Filter>Header Files</Filter>
+      <Filter>Spaceship</Filter>
     </ClInclude>
     <ClInclude Include="src\Bullets.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Draw.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Text.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Utils.h">
-      <Filter>Header Files</Filter>
+      <Filter>Spaceship\Bullet</Filter>
     </ClInclude>
     <ClInclude Include="src\PowerUp.h">
-      <Filter>Header Files</Filter>
+      <Filter>Spaceship\PowerUp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Asteroids.h">
+      <Filter>Asteroid</Filter>
     </ClInclude>
     <ClInclude Include="src\Bomb.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Explosion.h">
-      <Filter>Header Files</Filter>
+      <Filter>Asteroid\Bomb</Filter>
     </ClInclude>
     <ClInclude Include="src\Button.h">
-      <Filter>Header Files</Filter>
+      <Filter>Utils\Button</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Draw.h">
+      <Filter>Utils\Draw</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Explosion.h">
+      <Filter>Asteroid\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Globals.h">
+      <Filter>Globals</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Text.h">
+      <Filter>Utils\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utils.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameLoop.h">
+      <Filter>Game\Loop</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

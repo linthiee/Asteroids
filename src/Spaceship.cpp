@@ -12,8 +12,6 @@ namespace ASSETS
 	{
 		void SetSound(Sound sound);
 		void SetPlayingSound();
-		//void PauseUnpauseSong(buttons::Button& mute);
-		void PauseSounds(Sound sound);
 		void UnpauseSound(Sound sound);
 	}
 }
