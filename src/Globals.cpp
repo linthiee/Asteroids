@@ -26,6 +26,15 @@ int EXTERNS::bombTextureID = 0;
 std::string EXTERNS::backgroundTexture = "res/img/background_space.png";
 int EXTERNS::backgroundTextureID = 0;
 
+std::string EXTERNS::menuTexture = "res/img/menu_asteroids.png";
+int EXTERNS::menuTextureID = 0;
+
+std::string EXTERNS::buttonTexture = "res/img/button_asteroids.png";
+int EXTERNS::buttonTextureID = 0;
+
+std::string EXTERNS::titleTexture = "res/img/title_asteroids.png";
+int EXTERNS::titleTextureID = 0;
+
 std::string EXTERNS::gameHUD = "res/img/game_HUD.png";;
 int EXTERNS::gameHudID = 0;
 
@@ -57,6 +66,15 @@ std::string EXTERNS::explosionTexture = "res/img/explosion.png";;
  std::string EXTERNS::powerUpInvencible = "res/sound/pu_active_invincible.wav";
  Sound EXTERNS::powerUpInvencibleSound;
 
+ std::string EXTERNS::bombExplosion = "res/sound/bomb_explosion.wav";
+ Sound EXTERNS::bombExplosionSound;
+
+ std::string EXTERNS::playSong = "res/sound/play_sound.wav";
+ Sound EXTERNS::playSound;
+
+ std::string EXTERNS::menuSong = "res/sound/menu_sound.wav";
+ Sound EXTERNS::menuSound;
+
  extern double EXTERNS::timer = 0;
 
  extern int EXTERNS::initialMaxAsteroidsOnScreen = 15;
@@ -69,3 +87,7 @@ std::string EXTERNS::explosionTexture = "res/img/explosion.png";;
  extern int EXTERNS::currentAsteroids = 0;
 
  extern int EXTERNS::spawnInvincibilityTimerDecay = 5;
+
+ extern bool EXTERNS::retry = false;
+
+ extern bool EXTERNS::gamePaused = false;

@@ -29,6 +29,15 @@ namespace EXTERNS
 	extern std::string backgroundTexture;
 	extern int backgroundTextureID;
 
+	extern std::string menuTexture;
+	extern int menuTextureID;
+
+	extern std::string buttonTexture;
+	extern int buttonTextureID;
+
+	extern std::string titleTexture;
+	extern int titleTextureID;
+
 	extern std::string gameHUD;
 	extern int gameHudID;
 
@@ -60,6 +69,15 @@ namespace EXTERNS
 	extern std::string powerUpInvencible;
 	extern Sound powerUpInvencibleSound;
 
+	extern std::string bombExplosion;
+	extern Sound bombExplosionSound;
+
+	extern std::string menuSong;
+	extern Sound menuSound;
+
+	extern std::string playSong;
+	extern Sound playSound;
+
 	extern double timer;
 
 	extern int initialMaxAsteroidsOnScreen;  
@@ -73,6 +91,10 @@ namespace EXTERNS
 
 	extern int spawnInvincibilityTimer;
 	extern int spawnInvincibilityTimerDecay;
+
+	extern bool retry;
+
+	extern bool gamePaused;
 }
 
 namespace GLOBALS

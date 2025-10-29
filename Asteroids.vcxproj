@@ -22,6 +22,7 @@
     <ClCompile Include="src\Asteroids.cpp" />
     <ClCompile Include="src\Bomb.cpp" />
     <ClCompile Include="src\Bullets.cpp" />
+    <ClCompile Include="src\Button.cpp" />
     <ClCompile Include="src\Draw.cpp" />
     <ClCompile Include="src\Explosion.cpp" />
     <ClCompile Include="src\GameLoop.cpp" />
@@ -35,6 +36,7 @@
     <ClInclude Include="src\Asteroids.h" />
     <ClInclude Include="src\Bomb.h" />
     <ClInclude Include="src\Bullets.h" />
+    <ClInclude Include="src\Button.h" />
     <ClInclude Include="src\Draw.h" />
     <ClInclude Include="src\Explosion.h" />
     <ClInclude Include="src\GameLoop.h" />

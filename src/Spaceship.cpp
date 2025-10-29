@@ -61,6 +61,8 @@ void PLAYER::CreateSpaceship(Spaceship& spaceship)
 	spaceship.fireRate = 0.4f;
 	spaceship.currentFireRateCd = 0.0f;
 
+	spaceship.score = 0;
+
 	spaceship.lookingDirection.y = static_cast<float>(atan2f(spaceship.lookingDirection.y, spaceship.lookingDirection.x));
 }
 
